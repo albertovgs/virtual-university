@@ -1,0 +1,7 @@
+#paths to ignore
+/Learning/resources/files/
+/Learning/resources/images/
+/Learning/resources/videos/
+/Learning/resources/dist/img/
+/Learning/.editorconfig
+/Learning/composer.json
