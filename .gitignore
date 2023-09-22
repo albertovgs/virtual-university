@@ -5,3 +5,4 @@
 /Learning/resources/dist/img/
 /Learning/.editorconfig
 /Learning/composer.json
+/Learning/application/config/database.php
