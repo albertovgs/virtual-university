@@ -22,8 +22,6 @@ Follow these step-by-step instructions to set up Virtual University:
 
    - **Apache Web Server**: Ensure you have the Apache web server installed. You can typically install Apache on Ubuntu using `sudo apt install apache2`.
 
-   - **Git**: You'll need Git to clone this repository. If you don't have it installed, you can do so with `sudo apt install git`.
-
 2. **Project Configuration**:
    - Move the "Learning" folder to your Apache's HTML directory (typically `/var/www/html` on Ubuntu).
 
