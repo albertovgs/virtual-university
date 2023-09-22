@@ -35,7 +35,6 @@
 
     $(document).on('click', '.btn_rst_pass', function () {
       var code = $(this).attr('data-code');
-      //console.log(option, code);
       $.ajax({
         url: "<?= base_url('Admin_Students/resetPass?code='); ?>" + code,
         method: "post",
@@ -55,7 +54,6 @@
         data: data,
         dataType: "json",
         success: function (response) {
-          console.info(response);
           if (response.status == "error") {
             if (response.errors) {
 
@@ -78,7 +76,6 @@
     $(document).on('submit', '#profesors_form', function (event) {
       event.preventDefault();
       var data = $(this).serialize();
-      //console.log(data);
       $(this).find("input").each(function (element) {
         $(this).removeClass("is-invalid");
         $(this).next(".invalid-feedback").remove();
@@ -93,7 +90,6 @@
         data: data,
         dataType: "json",
         success: function (response) {
-          console.info(response);
           if (response.status == "error") {
             if (response.errors) {
               $.each(response.errors, function (variable, value) {
@@ -143,7 +139,6 @@
         data: data,
         dataType: "json",
         success: function (response) {
-          //console.info(response);
           if (response.status == "error") {
             if (response.errors) {
               $.each(response.errors, function (variable, value) {
@@ -173,7 +168,6 @@
       url: "<?= base_url('Admin_Profesors/showTable?status='); ?>" + status,
       method: "get",
       success: function (respuesta) {
-        //console.log(respuesta);
         $(document).find('#wraper').empty().append(respuesta);
         setTimeout(function () {
           $('#profesorsTable').DataTable({

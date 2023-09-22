@@ -2,7 +2,7 @@
   <section class="content">
     <div class="row mt-2">
       <div class="container col-sm-12 col-lg-10">
-        <?php //echo json_encode($session = $this->session->userdata('up_sess'));
+        <?php
         $session = $this->session->userdata('up_sess');
         foreach ($posts as $epost) {
           if ($epost->status_advertisement == 'Active' && (TRUE)) {

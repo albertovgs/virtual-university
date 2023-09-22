@@ -8,7 +8,7 @@
         </tr>
     </thead>
     <tbody>
-        <?php //echo JSON_encode($students);
+        <?php
         if (@$periods) {
             foreach (@$periods as $iPrd) { ?>
                 <tr>

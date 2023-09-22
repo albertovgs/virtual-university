@@ -36,7 +36,6 @@
             event.preventDefault();
             var id = $(this).attr('data-id');
             var data = $(this).serialize();
-            //console.log(data);
             $(this).find("input").each(function (element) {
                 $(this).removeClass("is-invalid");
                 $(this).next(".invalid-feedback").remove();
@@ -47,7 +46,6 @@
                 data: data,
                 dataType: "json",
                 success: function (response) {
-                    //console.info(response);
                     if (response.status == "error") {
                         if (response.errors) {
                             $.each(response.errors, function (variable, value) {
@@ -120,7 +118,6 @@
             event.preventDefault();
             var major = $("#students_form").attr('data-id');
             var data = $(this).serialize();
-            console.log(data);
             $(this).find("input").each(function (element) {
                 $(this).removeClass("is-invalid");
                 $(this).next(".invalid-feedback").remove();
@@ -135,7 +132,6 @@
                 data: data,
                 dataType: "json",
                 success: function (response) {
-                    //console.info(response);
                     if (response.status == "error") {
                         if (response.errors) {
                             $.each(response.errors, function (variable, value) {
@@ -183,7 +179,6 @@
                 data: data,
                 dataType: "json",
                 success: function (response) {
-                    //console.info(response);
                     if (response.status == "error") {
                         if (response.errors) {
                             $.each(response.errors, function (variable, value) {
@@ -295,7 +290,6 @@
             url: "<?= base_url('Admin_Students/showTable?status='); ?>" + status + "&id=" + id,
             method: "get",
             success: function (respuesta) {
-                //console.log(respuesta);
                 $(document).find('#wraper').empty().append(respuesta);
                 setTimeout(function () {
                     $('#studentsTable').DataTable({

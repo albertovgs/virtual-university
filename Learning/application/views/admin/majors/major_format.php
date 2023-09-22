@@ -10,7 +10,6 @@ if (@$form == "edit") {
 } else {
   $title = "Register";
 }
-//var_dump($majorFind);
 ?>
 <div class="modal-content">
   <form id="majors_format">
@@ -44,7 +43,7 @@ if (@$form == "edit") {
                 <?= @$majorFind->lastname_person; ?>
               </option>
             <?php }
-            if (@$cordis) { /*echo json_encode($majors)*/
+            if (@$cordis) {
               ;
               foreach (@$cordis as $key => $cordi) {
                 ?>

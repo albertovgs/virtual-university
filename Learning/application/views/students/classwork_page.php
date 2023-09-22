@@ -1,6 +1,4 @@
-<?php $session = $this->session->userdata('up_sess');
-//echo json_encode($session);
-?>
+<?php $session = $this->session->userdata('up_sess'); ?>
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container">
@@ -82,8 +80,8 @@
                                 <?= @$classwork->content_classwork; ?>
                             </p>
                         </div>
-                        <?php //echo json_encode($classworkStd);
-                            if (@$classworkStd) { ?>
+                        <?php
+                        if (@$classworkStd) { ?>
                             <div class="callout callout-info">
                                 <h5>Delivered</h5>
                                 <span class="float-right badge bg-primary">Delivered at

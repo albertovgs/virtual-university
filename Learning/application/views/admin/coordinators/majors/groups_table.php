@@ -9,7 +9,7 @@
         </tr>
     </thead>
     <tbody>
-        <?php //echo JSON_encode($students);
+        <?php
         if (@$groups) {
             foreach (@$groups as $iGrp) { ?>
                 <tr>

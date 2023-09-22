@@ -61,7 +61,7 @@
 
                     <option value="All">All</option>
                     <option value="Theachers">Only theachers</option>
-                    <?php if (@$majors) { /*echo json_encode($majors)*/
+                    <?php if (@$majors) {
                         ;
                         foreach (@$majors as $key => $major) {
                             ?>

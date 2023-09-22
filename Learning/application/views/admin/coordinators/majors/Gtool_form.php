@@ -1,7 +1,6 @@
-<?php if ($this->input->get('option') == "level-up") {
-    // echo json_encode($group); 
+<?php
+if ($this->input->get('option') == "level-up") {
     ?>
-
     <div class="modal-content">
         <form id="Gtool_form" data-id="<?= $id; ?>">
             <input hidden type="number" value="<?= $group->id_group; ?>" id="inpIdGrp" name="inpIdGrp">

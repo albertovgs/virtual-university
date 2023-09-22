@@ -65,7 +65,7 @@
             <option value="<?= @$studentFinded->major_student; ?>">
               <?= @$studentFinded->major_student ? $studentFinded->name_major : 'Select one'; ?>
             </option>
-            <?php if (@$majors) { /*echo json_encode($majors)*/
+            <?php if (@$majors) {
               ;
               foreach (@$majors as $key => $major) {
                 ?>
@@ -95,8 +95,7 @@
                   <?php }
                 }
               }
-          //echo json_encode($option);
-        } else if (@$option == "reactive") { ?>
+          } else if (@$option == "reactive") { ?>
                 <label for="exampleInputBorderWidth2">Group:</label>
                 <select class="form-control input-group" name="inpGroup" id="inpGroup">
                   <option value="">Select one</option>
@@ -107,7 +106,7 @@
                     <?= $grp->clave_group; ?>
                     </option>
                 <?php }
-        } ?>
+          } ?>
             </select>
         </div>
       </div>

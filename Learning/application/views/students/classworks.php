@@ -1,4 +1,4 @@
-<?php //echo json_encode($classworks);
+<?php
 if (@$classworks) {
     foreach ($classworks as $clsWk) {
         ?>

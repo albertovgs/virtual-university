@@ -1,6 +1,4 @@
-<?php $session = $this->session->userdata('up_sess');
-//echo json_encode($class);
-?>
+<?php $session = $this->session->userdata('up_sess'); ?>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">

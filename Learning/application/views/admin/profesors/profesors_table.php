@@ -11,7 +11,7 @@
     </tr>
   </thead>
   <tbody>
-    <?php /*echo JSON_encode($profesors);*/if (@$profesors) {
+    <?php if (@$profesors) {
       foreach ($profesors as $iProf) { ?>
         <tr>
           <td>

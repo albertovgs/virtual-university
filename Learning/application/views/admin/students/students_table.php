@@ -17,7 +17,7 @@
     </tr>
   </thead>
   <tbody>
-    <?php //echo JSON_encode($students);
+    <?php
     if (@$students) {
       foreach (@$students as $iStud) { ?>
         <tr>

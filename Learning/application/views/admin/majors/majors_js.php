@@ -25,7 +25,6 @@
     $(document).on('click', '.btn_operation', function () {
       var option = $(this).attr('data-opt');
       var code = $(this).attr('data-code');
-      //console.log(option, code);
       $.ajax({
         url: "<?= base_url('Admin_Majors/register_form?option='); ?>" + option + "&code=" + code,
         method: "post",
@@ -39,7 +38,6 @@
     $(document).on('submit', '#majors_format', function (event) {
       event.preventDefault();
       var data = $(this).serialize();
-      //console.log(data);
       $(this).find("input").each(function (element) {
         $(this).removeClass("is-invalid");
         $(this).next(".invalid-feedback").remove();
@@ -58,8 +56,6 @@
         data: data,
         dataType: "json",
         success: function (response) {
-          console.info(data);
-          console.info(response);
           if (response.status == "errores") {
             if (response.errors) {
               $.each(response.errors, function (variable, value) {
@@ -78,7 +74,6 @@
             });
             cargar_contenido("Active");
           } else {
-            console.log(response.message);
             $(document).find('#majors_modal').modal('hide');
             $(document).Toasts('create', {
               title: 'Informaci&oacute;n',
@@ -99,7 +94,6 @@
       url: "<?= base_url('Admin_Majors/showMajors?status='); ?>" + status,
       method: "get",
       success: function (respuesta) {
-        //console.log(respuesta);
         $(document).find('#wraper').empty().append(respuesta);
       }
     });

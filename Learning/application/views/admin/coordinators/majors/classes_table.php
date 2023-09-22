@@ -12,7 +12,7 @@
         </tr>
     </thead>
     <tbody>
-        <?php //echo JSON_encode($classes);
+        <?php
         if (@$classes) {
             foreach (@$classes as $iCls) { ?>
                 <tr>

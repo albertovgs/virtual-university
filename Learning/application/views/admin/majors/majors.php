@@ -1,6 +1,5 @@
 <div class="row">
-  <?php if (@$majors) { /*echo json_encode($majors)*/
-    ;
+  <?php if (@$majors) {
     $n = 0;
     foreach ($majors as $major) {
       $n += 1;

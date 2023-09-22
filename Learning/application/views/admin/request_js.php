@@ -4,7 +4,6 @@
         $(document).on('click', '.btn_operation', function () {
             var option = $(this).attr('data-opt');
             var code = $(this).attr('data-code');
-            console.log(option, code);
             $.ajax({
                 url: "<?= base_url('Home/confirmation?option='); ?>" + option + "&code=" + code,
                 method: "post",
@@ -24,7 +23,6 @@
                 data: data,
                 dataType: "json",
                 success: function (response) {
-                    //console.info(response);
                     if (response.status == "error") {
                         if (response.errors) {
 

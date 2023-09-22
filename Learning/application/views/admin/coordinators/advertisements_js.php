@@ -102,7 +102,6 @@
         $(document).on('submit', '#form_posts', function (event) {
             event.preventDefault();
             var data = new FormData($(this)[0]);
-            //console.log(data);
             $(this).find("input").each(function (element) {
                 $(this).removeClass("is-invalid");
                 $(this).next(".invalid-feedback").remove();
@@ -120,8 +119,6 @@
                 data: data,
                 success: function (response) {
                     response = JSON.parse(response);
-
-                    //console.info(response);
                     if (response.status == "error") {
                         if (response.errors) {
                             $.each(response["errors"], function (variable, value) {
@@ -262,7 +259,6 @@
         $(document).on('submit', '#form_comments', function (event) {
             event.preventDefault();
             var data = $(this).serialize();
-            console.info(data);
             $.ajax({
                 url: "<?= base_url('posts/proccessFormComments') ?>",
                 method: "post",
@@ -314,7 +310,6 @@
 
     function load_comments() {
         var code_ps = $(this).attr('data-ps');
-        console.info(code_ps);
         $.ajax({
             url: "<?= base_url('comments/mostrarContenido?code_ps=') ?>" + code_ps,
             method: "get",

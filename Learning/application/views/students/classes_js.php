@@ -62,7 +62,6 @@
             data: data,
             dataType: "json",
             success: function (response) {
-                //console.info(response);
                 if (response.status == "error") {
                     if (response.errors) {
                         $.each(response.errors, function (variable, value) {
@@ -109,7 +108,6 @@
             $(this).removeClass('is-invalid');
             $(this).next('.invalid-feedback').remove();
         });
-        //console.info(data);
         $.ajax({
             url: "<?= base_url('Classes/proccessClassworsForm'); ?>",
             method: "post",
