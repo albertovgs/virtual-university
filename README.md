@@ -7,7 +7,7 @@ Virtual University is a comprehensive educational management system built on the
 Before getting started, ensure you have the following prerequisites:
 - **LAMP Stack**: You'll need a Linux, Apache, MySQL, and PHP environment.
 - **Proficiency in CodeIgniter 3.1, PHP, jQuery, and JavaScript**: Familiarity with these technologies is essential for customizing and extending the project.
-- **Requirements for technologies are the necessaries for CodeIgniter 3.1** here(https://codeigniter.com/userguide3/general/requirements.html).
+- **Requirements for technologies are the necessaries for CodeIgniter 3.1** [here](https://codeigniter.com/userguide3/general/requirements.html).
 
 ## Installation
 Follow these step-by-step instructions to set up Virtual University:
@@ -29,6 +29,18 @@ Follow these step-by-step instructions to set up Virtual University:
 
 3. **Apache Configuration**:
    - Configure Apache to allow URL rewriting by editing the `/etc/apache2/apache2.conf` file.
+   Change
+   <Directory /var/www/>
+      Options Indexes FollowSymLinks
+      AllowOverride None
+      Require all granted
+   </Directory>
+   to
+   <Directory /var/www/>
+      Options Indexes FollowSymLinks
+      AllowOverride All
+      Require all granted
+   </Directory>
 
 4. **Enable URL Rewriting**:
    - Run the following command to enable URL rewriting: `sudo a2enmod rewrite`.
