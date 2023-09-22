@@ -16,8 +16,7 @@
   <link rel="stylesheet" href="<?= base_url('resources/dist/css/adminlte.min.css'); ?>">
   <!-- DataTables -->
   <link rel="stylesheet" href="<?= base_url('resources/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css'); ?>">
-  <link rel="stylesheet"
-    href="<?= base_url('resources/plugins/datatables-responsive/css/responsive.bootstrap4.min.css'); ?>">
+  <link rel="stylesheet"href="<?= base_url('resources/plugins/datatables-responsive/css/responsive.bootstrap4.min.css'); ?>">
   <link rel="stylesheet" href="<?= base_url('resources/plugins/datatables-buttons/css/buttons.bootstrap4.min.css'); ?>">
   <link rel="stylesheet" href="<?= base_url('resources/plugins/select2/css/select2.min.css'); ?>">
 </head>
