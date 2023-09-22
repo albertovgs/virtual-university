@@ -29,18 +29,20 @@ Follow these step-by-step instructions to set up Virtual University:
 
 3. **Apache Configuration**:
    - Configure Apache to allow URL rewriting by editing the `/etc/apache2/apache2.conf` file.
-   Change
-   <Directory /var/www/>
-      Options Indexes FollowSymLinks
-      AllowOverride None
-      Require all granted
-   </Directory>
-   to
-   <Directory /var/www/>
-      Options Indexes FollowSymLinks
-      AllowOverride All
-      Require all granted
-   </Directory>
+   ```html Change
+      <Directory /var/www/>
+         Options Indexes FollowSymLinks
+         AllowOverride None
+         Require all granted
+      </Directory>
+   ```
+   ```html To
+      <Directory /var/www/>
+         Options Indexes FollowSymLinks
+         AllowOverride All
+         Require all granted
+      </Directory>
+   ```
 
 4. **Enable URL Rewriting**:
    - Run the following command to enable URL rewriting: `sudo a2enmod rewrite`.
