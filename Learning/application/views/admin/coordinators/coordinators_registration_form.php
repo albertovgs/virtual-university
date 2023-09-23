@@ -1,19 +1,23 @@
 <div
-  class="modal-content <?= @$option == "edit" ? 'bg-green' : (@$option == "inactivate" ? 'bg-red' : 'bg-primary'); ?>">
+  class="modal-content <?= @$option == "edit" || @$option == "reactive" ? 'bg-green' : (@$option == "inactivate" ? 'bg-red' : 'bg-primary'); ?>">
   <form id="Coordinator_form">
     <?php if (@$profesorFinded) { ?>
       <input type="hidden" name="code" id="code" value="<?= @$profesorFinded->id_person; ?>">
       <input type="hidden" name="option" id="option" value="<?= @$option; ?>">
     <?php } ?>
-    <?php if (@$option) {
+    <?php
+    if (@$option) {
       if (@$option == 'edit') {
         $titulo = "Edit";
       } else if (@$option == 'inactivate') {
         $titulo = "Shutdown";
+      } else {
+        $titulo = "Reactive";
       }
     } else {
       $titulo = "Register";
-    } ?>
+    }
+    ?>
     <div class="modal-header">
       <h1 class="card-title">
         <?= @$titulo; ?> Coordinator
@@ -62,7 +66,8 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-      <button type="submit" class="btn btn-primary"><?= @$titulo == "Shutdown" ? 'Shutdown' : 'Save'; ?></button>
+      <button type="submit"
+        class="btn btn-primary"><?= @$titulo == "Shutdown" ? 'Shutdown' : (@$option == "reactive" ? 'Reactive' : 'Save'); ?></button>
     </div>
   </form>
 </div>
