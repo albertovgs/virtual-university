@@ -50,7 +50,7 @@ Follow these step-by-step instructions to set up Virtual University:
    - In the `scripts` folder, you'll find a `.sql` file. Use this file to create the required database.
 
 6. **Database Configuration**:
-   - Open the `/var/www/html/virtual-university/Learning/application/config/database.php` file and provide the necessary database credentials.
+   - Open the `/var/www/html/Learning/application/config/database.php` file and provide the necessary database credentials.
 
 ## Usage
 To access Virtual University:
