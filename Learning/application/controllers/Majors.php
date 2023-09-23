@@ -64,7 +64,6 @@ class Majors extends CI_Controller
                     "type_period" => "Current",
                 );
                 $data["period"] = $this->DAO->queryEntity("tb_periods", $filter, TRUE);
-                //echo json_encode($data["period"]);
                 echo $this->load->view('admin/coordinators/majors/periods_form', $data, TRUE);
             }
         }

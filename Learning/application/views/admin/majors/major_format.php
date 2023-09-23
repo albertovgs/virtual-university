@@ -5,8 +5,8 @@ if (@$form == "edit") {
   $title   = "Delete";
   $disable = TRUE;
 } elseif (@$form == "active") {
-  $title   = "Re-Active";
-  $disable = TRUE;
+  $title   = "Reactive";
+  $disable = FALSE;
 } else {
   $title = "Register";
 }
@@ -66,7 +66,7 @@ if (@$form == "edit") {
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
       <button type="submit" class="btn btn-primary">
-        <?= @$form == "delete" ? 'Delete' : 'Save'; ?>
+        <?= @$form == "delete" ? 'Delete' : (@$form == "active" ? 'Reactive' : 'Save'); ?>
       </button>
     </div>
   </form>
