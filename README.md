@@ -69,7 +69,7 @@ This project is licensed under the MIT License.
 - **Alberto Vargas**
   - GitHub: [@Alberto-Vgs](https://github.com/Alberto-Vgs)
   - TikTok: [@alberto_vgs](https://www.tiktok.com/@alberto_vgs)
-  - Instagram: [@alberto_vgs](https://www.instagram.com/alberto_vgs_/)
+  - Instagram: [@alberto_vgs_](https://www.instagram.com/alberto_vgs_/)
   - LinkedIn: [Alberto Vargas](https://www.linkedin.com/in/alberto-vgs/)
   
 Feel free to connect with Alberto on GitHub, TikTok, Instagram, and LinkedIn for exciting updates and insights!
