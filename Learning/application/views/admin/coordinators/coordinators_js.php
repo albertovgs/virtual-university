@@ -1,10 +1,13 @@
 <script>
   $(function () {
+
     cargar_contenido("Active");
+
     $(document).on('click', '#active', function () {
       var status = "Active";
       cargar_contenido(status);
     });
+
     $(document).on('click', '#inactive', function () {
       var status = "Inactive";
       cargar_contenido(status);
@@ -86,7 +89,7 @@
         $(this).next('.invalid-feedback').remove();
       });
       $.ajax({
-        url: "<?= base_url('Admin_Cordination/proces_profesors_form'); ?>",
+        url: "<?= base_url('Admin_Cordination/proces_coordinator_form'); ?>",
         method: "post",
         data: data,
         dataType: "json",
@@ -141,4 +144,5 @@
       }
     });
   }
+
 </script>

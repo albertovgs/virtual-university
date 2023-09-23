@@ -39,35 +39,40 @@ class Admin_Cordination extends CI_Controller
 	{
 		if ($this->input->is_ajax_request()) {
 			if ($this->input->get('option')) {
-				if ($this->input->get('option') == "edit") {
-					$filter                 = array(
-						"id_person" => $this->input->get('code'),
-					);
-					$data['option']         = $this->input->get('option');
-					$data["profesorFinded"] = $this->DAO->profesorsTable($filter, TRUE);
-					echo $this->load->view('admin/coordinators/coordinators_registration_form', $data, TRUE);
-				} else if ($this->input->get('option') == "inactivate") {
-					$filter                 = array(
-						"id_person" => $this->input->get('code'),
-					);
-					$data['option']         = $this->input->get('option');
-					$data["profesorFinded"] = $this->DAO->profesorsTable($filter, TRUE);
-					echo $this->load->view('admin/coordinators/coordinators_registration_form', $data, TRUE);
-				} else if ($this->input->get('option') == "reactive") {
-					$filter                 = array(
-						"id_person" => $this->input->get('code'),
-					);
-					$data['code']           = $this->input->get('code');
-					$data['option']         = $this->input->get('option');
-					$data["profesorFinded"] = $this->DAO->profesorsTable($filter, TRUE);
-					echo $this->load->view('admin/coordinators/coordinators_registration_form', $data, TRUE);
-				} else {
-					$filter                 = array(
-						"id_person" => $this->input->get('code'),
-					);
-					$data['option']         = $this->input->get('option');
-					$data["profesorFinded"] = $this->DAO->profesorsDetails($filter, TRUE);
-					echo $this->load->view('admin/coordinators/coordinators_registration_form', $data, TRUE);
+				switch ($this->input->get('option')) {
+					case 'edit':
+						$filter = array(
+							"id_person" => $this->input->get('code'),
+						);
+						$data['option'] = $this->input->get('option');
+						$data["profesorFinded"] = $this->DAO->profesorsTable($filter, TRUE);
+						echo $this->load->view('admin/coordinators/coordinators_registration_form', $data, TRUE);
+						break;
+					case 'reactive':
+						$filter = array(
+							"id_person" => $this->input->get('code'),
+						);
+						$data['code'] = $this->input->get('code');
+						$data['option'] = $this->input->get('option');
+						$data["profesorFinded"] = $this->DAO->profesorsTable($filter, TRUE);
+						echo $this->load->view('admin/coordinators/coordinators_registration_form', $data, TRUE);
+						break;
+					case 'inactivate':
+						$filter = array(
+							"id_person" => $this->input->get('code'),
+						);
+						$data['option'] = $this->input->get('option');
+						$data["profesorFinded"] = $this->DAO->profesorsTable($filter, TRUE);
+						echo $this->load->view('admin/coordinators/coordinators_registration_form', $data, TRUE);
+						break;
+					default:
+						$filter = array(
+							"id_person" => $this->input->get('code'),
+						);
+						$data['option'] = $this->input->get('option');
+						$data["profesorFinded"] = $this->DAO->profesorsDetails($filter, TRUE);
+						echo $this->load->view('admin/coordinators/coordinators_registration_form', $data, TRUE);
+						break;
 				}
 			} else {
 				echo $this->load->view('admin/coordinators/coordinators_registration_form', null, TRUE);
@@ -80,7 +85,7 @@ class Admin_Cordination extends CI_Controller
 		}
 	}
 
-	function proces_profesors_form()
+	function proces_coordinator_form()
 	{
 		if ($this->input->is_ajax_request()) {
 			if ($this->input->post("option") && $this->input->post("code")) {
@@ -97,7 +102,6 @@ class Admin_Cordination extends CI_Controller
 				if ($extValidation) {
 					$exist = $this->DAO->queryEntity("tb_users", $filter = array("IDUser" => $this->input->post('inpID')), TRUE);
 					if (!$exist) {
-						//echo json_encode($exist);
 						$data  = array(
 							"name_person" => $this->input->post('inpName'),
 							"lastname_person" => $this->input->post('inpLastname'),
@@ -177,7 +181,6 @@ class Admin_Cordination extends CI_Controller
 				} else {
 					$response = $this->optionsProccess();
 				}
-				//echo JSON_encode($response);
 			} else {
 				$response = array(
 					"status" => "error",
@@ -258,9 +261,7 @@ class Admin_Cordination extends CI_Controller
 		$email = $email . $arr2;
 		$temp  = $email . "@learning.edu";
 		$temp  = strtolower($temp);
-		//echo json_encode($temp);
 		$exist = $this->DAO->queryEntity("tb_users", $filter = array("email_user" => $temp), TRUE);
-		//echo json_encode($exist);
 		if ($exist) {
 			$email = '';
 			$email = $arr1[0][0] . $arr1[0][1] . $arr1[0][2];

@@ -76,7 +76,3 @@
         </div>
     </section>
 </div>
-
-<script>
-
-</script>
