@@ -66,7 +66,6 @@
                 dataType: "json",
                 data: data,
                 success: function (response) {
-                    //response = JSON.parse(response);
                     if (response.status == "error") {
                         if (response.errors) {
                             $.each(response["errors"], function (variable, value) {
@@ -143,7 +142,6 @@
                             delay: 5000,
                             body: response.message
                         });
-                        //$(document).find('#modal_posts').modal('hide');
                         setTimeout(function () {
                             load_content("Adver");
                         }, 1000);

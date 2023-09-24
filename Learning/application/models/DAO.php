@@ -120,13 +120,12 @@ class DAO extends CI_Model
 
   function getMajors($filter = array(), $unique = FALSE)
   {
-    $test = $this->db->select('*');
+    $this->db->select('*');
     if ($filter) {
       $this->db->where($filter);
     }
-    $test = $this->db->from('tb_majors');
-    $test = $this->db->join('tb_people', 'tb_majors.cordi_major = tb_people.id_person');
-    //$test = $this->db->join('tb_contracts', 'tb_people.id_person = tb_contracts.fk_person');
+    $this->db->from('tb_majors');
+    $this->db->join('tb_people', 'tb_majors.cordi_major = tb_people.id_person');
     $query = $this->db->get("");
     if ($unique) {
       return $query->row();
@@ -141,10 +140,9 @@ class DAO extends CI_Model
     if ($filter) {
       $this->db->where($filter);
     }
-    $test = $this->db->select('id_user,name_person,lastname_person');
-    $test = $this->db->from('tb_users');
-    $test = $this->db->join('tb_people', 'tb_users.id_user = tb_people.id_person');
-    //$test = $this->db->join('tb_contracts', 'tb_people.id_person = tb_contracts.fk_person');
+    $this->db->select('id_user,name_person,lastname_person');
+    $this->db->from('tb_users');
+    $this->db->join('tb_people', 'tb_users.id_user = tb_people.id_person');
     $query = $this->db->get("");
     if ($unique) {
       return $query->row();
@@ -155,36 +153,27 @@ class DAO extends CI_Model
 
   function profesorsTable($filter = array(), $unique = FALSE)
   {
-    $test = $this->db->where($filter);
-    $test = $this->db->select('id_person,IDUser,name_person,lastname_person,gender_person,birthday_person,email_user,force_change_user,status_user,id_user');
-    $test = $this->db->from('tb_users');
-    $test = $this->db->join('tb_people', 'tb_users.id_user = tb_people.id_person');
-    //$test = $this->db->join('tb_contracts', 'tb_people.id_person = tb_contracts.fk_person');
+    $this->db->where($filter);
+    $this->db->select('id_person,IDUser,name_person,lastname_person,gender_person,birthday_person,email_user,force_change_user,status_user,id_user');
+    $this->db->from('tb_users');
+    $this->db->join('tb_people', 'tb_users.id_user = tb_people.id_person');
     $query = $this->db->get("");
     if ($unique) {
       return $query->row();
     } else {
       return $query->result();
     }
-    /*if ($this->db->error()['message'] != "") {
-      return array(
-        "status" => "error",
-        "message" => $this->db->error()['message']
-        );
-      }else {
-        return array();
-      }*/
   }
 
   function StudentsTable($filter = array(), $unique = FALSE)
   {
-    $test = $this->db->where($filter);
-    $test = $this->db->select('IDUser,id_person,name_person,lastname_person,gender_person,birthday_person,email_user,force_change_user,status_user,id_user,id_student,major_student,group_student,id_major,name_major,clave_major,cordi_major,id_group,clave_group,major_group,status_group');
-    $test = $this->db->from('tb_users');
-    $test = $this->db->join('tb_people', 'tb_users.id_user = tb_people.id_person');
-    $test = $this->db->join('tb_students', 'tb_users.id_user = tb_students.id_student');
-    $test = $this->db->join('tb_majors', 'tb_students.major_student = tb_majors.id_major');
-    $test = $this->db->join('tb_groups', 'tb_students.group_student = tb_groups.id_group');
+    $this->db->where($filter);
+    $this->db->select('IDUser,id_person,name_person,lastname_person,gender_person,birthday_person,email_user,force_change_user,status_user,id_user,id_student,major_student,group_student,id_major,name_major,clave_major,cordi_major,id_group,clave_group,major_group,status_group');
+    $this->db->from('tb_users');
+    $this->db->join('tb_people', 'tb_users.id_user = tb_people.id_person');
+    $this->db->join('tb_students', 'tb_users.id_user = tb_students.id_student');
+    $this->db->join('tb_majors', 'tb_students.major_student = tb_majors.id_major');
+    $this->db->join('tb_groups', 'tb_students.group_student = tb_groups.id_group');
     $this->db->distinct();
     $query = $this->db->get("");
     if ($unique) {
@@ -252,7 +241,7 @@ class DAO extends CI_Model
   {
     $this->db->select('*');
     if ($filter) {
-      $test = $this->db->where($filter);
+      $this->db->where($filter);
     }
     if ($justPeriod) {
       $this->db->from('tb_periods');

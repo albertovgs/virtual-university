@@ -255,7 +255,6 @@
     });
 
     function load_firstab(id) {
-        //var id = $(document).find("data-id").val()
         $.ajax({
             url: "<?= base_url('Majors/loadTabs?op='); ?>" + "P" + "&id=" + id,
             method: "get",

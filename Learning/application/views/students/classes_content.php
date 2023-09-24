@@ -1,4 +1,4 @@
-<?php //echo json_encode(@$classesStd);
+<?php
 if (@$classesStd) {
     foreach ($classesStd as $key => $Cls) {
         ?>

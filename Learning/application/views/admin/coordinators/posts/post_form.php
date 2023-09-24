@@ -56,7 +56,7 @@
                             <?= @$advertisements->show_to_advertisement; ?>
                         </option>
                     <?php } else { ?>
-                        <option value="">Select one.</option>
+                        <option value="" hidden>Select one.</option>
                     <?php } ?>
 
                     <option value="All">All</option>

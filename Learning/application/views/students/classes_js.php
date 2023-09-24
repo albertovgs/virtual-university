@@ -190,8 +190,6 @@
         });
     });
 
-    // -----------------------------------------------------------
-
     $(document).on('click', '#clsWorkStd', async function () {
         var grp = <?= $class->id_gpc; ?>;
         var cls = $(this).attr('data-cls');

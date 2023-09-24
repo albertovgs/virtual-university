@@ -52,7 +52,7 @@
         <div class="form-group col-6">
           <label for="exampleInputBorderWidth2">Gender:</label>
           <select class="form-control input-group" name="inpGender" id="inpGender">
-            <option value="<?= @$studentFinded->gender_person ? $studentFinded->gender_person : ''; ?>">
+            <option value="<?= @$studentFinded->gender_person ? $studentFinded->gender_person : ''; ?>" hidden>
               <?= @$studentFinded->gender_person ? ($studentFinded->gender_person == "M" ? "Male" : "Female") : 'Select one'; ?>
             </option>
             <option value="M">Male</option>
@@ -62,7 +62,7 @@
         <div class="form-group col-8">
           <label for="exampleInputBorderWidth2">Major:</label>
           <select class="form-control input-group" name="inpMajor" id="inpMajor">
-            <option value="<?= @$studentFinded->major_student; ?>">
+            <option value="<?= @$studentFinded->major_student; ?>" hidden>
               <?= @$studentFinded->major_student ? $studentFinded->name_major : 'Select one'; ?>
             </option>
             <?php if (@$majors) {
@@ -81,7 +81,7 @@
           <?php if (@$option == "edit" || @$option == "inactivate") { ?>
             <label for="exampleInputBorderWidth2">Group:</label>
             <select class="form-control input-group" name="inpGroup" id="inpGroup">
-              <option value="<?= @$group->id_group; ?>">
+              <option value="<?= @$group->id_group; ?>" hidden>
                 <?= @$group->clave_group ? $group->clave_group : 'Select one'; ?>
               </option>
               <?php
@@ -98,7 +98,7 @@
           } else if (@$option == "reactive") { ?>
                 <label for="exampleInputBorderWidth2">Group:</label>
                 <select class="form-control input-group" name="inpGroup" id="inpGroup">
-                  <option value="">Select one</option>
+                  <option value="" hidden>Select one</option>
                   <?php
                   foreach ($groups as $grp) {
                     ?>

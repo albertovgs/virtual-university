@@ -33,7 +33,6 @@ if (@$form == "edit") {
             id="inpClave" value="<?= @$majorFind->clave_major; ?>">
         </div>
         <div class="form-group col-12">
-          <!--select2-->
           <label for="exampleInputBorderWidth2">Cordination:</label>
           <select class="form-control input-group" <?= @$form == "delete" ? 'disabled' : ''; ?> name="inpCordi"
             id="inpCordi">
@@ -44,7 +43,6 @@ if (@$form == "edit") {
               </option>
             <?php }
             if (@$cordis) {
-              ;
               foreach (@$cordis as $key => $cordi) {
                 ?>
                 <option value="<?= @$cordi->id_user; ?>">
@@ -56,7 +54,6 @@ if (@$form == "edit") {
           </select>
         </div>
         <div class="form-group col-12">
-          <!--select2-->
           <label for="exampleInputBorderWidth2">Description:</label>
           <textarea class="form-control input-group" <?= @$disable ? 'disabled' : ''; ?> name="inpDesc" id="inpDesc"
             cols="30" rows="5"><?= @$majorFind->desc_major; ?></textarea>

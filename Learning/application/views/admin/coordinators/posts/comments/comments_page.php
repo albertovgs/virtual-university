@@ -16,18 +16,13 @@
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
               </button>
             </div>
-            <!-- /.card-tools -->
           </div>
-          <!-- /.card-header -->
           <div class="card-body" style="display: none;">
             <div class="card-footer card-comments" id="registered_comment" style="display: block;">
 
             </div>
-
           </div>
-          <!-- /.card-body -->
         </div>
-        <!-- /.card -->
       </div>
       <form id="form_comments">
         <div class="input-group">

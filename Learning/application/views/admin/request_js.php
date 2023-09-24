@@ -36,7 +36,6 @@
                             delay: 600000,
                             body: response.message
                         });
-                        //cargar_contenido("Active");
                         location.reload();
                     }
                 }

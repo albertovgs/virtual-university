@@ -1,28 +1,22 @@
-<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-  <!-- Content Header (Page header) -->
   <div class="content-header">
     <div class="container">
       <div class="row mb-2">
         <div class="col-sm-6">
           <h1 class="m-0">Change your password</h1>
-        </div><!-- /.col -->
-      </div><!-- /.row -->
-    </div><!-- /.container-fluid -->
+        </div>
+      </div>
+    </div>
   </div>
-  <!-- /.content-header -->
 
-  <!-- Main content -->
   <section class="content">
     <div class="col-md-6 mx-auto d-block">
-      <!-- Profile Image -->
       <div class="card card-primary card-outline">
         <br />
         <div class="text-center">
           <img src="http://localhost/Learning/resources/dist/img/isotype.png" class="mx-auto d-block" alt="isotype">
           <p class="login-box-msg text-danger">
             <?php
-            //Alert Login
             if (@$this->session->flashdata("error_chng")) {
               echo $this->session->flashdata("error_chng");
             }
@@ -55,13 +49,9 @@
               <div class="col-12">
                 <button type="submit" class="btn btn-primary btn-block">Change password</button>
               </div>
-              <!-- /.col -->
             </div>
           </form>
         </div>
       </div>
-      <!-- /.card -->
   </section>
-  <!-- /.content -->
 </div>
-<!-- /.content-wrapper -->

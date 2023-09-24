@@ -31,7 +31,7 @@
                 <div class="form-group col-3">
                     <label for="exampleInputBorderWidth2">Group:</label>
                     <select readonly class="form-control input-group" name="inpGroup" id="inpGroup">
-                        <option value="<?= @$classFinded->id_group; ?>">
+                        <option value="<?= @$classFinded->id_group; ?>" hidden>
                             <?= @$classFinded->clave_group ? @$classFinded->clave_group : 'Select one'; ?>
                         </option>
                         <?php if (@$groups) {
@@ -50,7 +50,7 @@
                 <div class="form-group col-3">
                     <label for="exampleInputBorderWidth2">Lab:</label>
                     <select readonly class="form-control input-group" name="inpclassRoom" id="inpclassRoom">
-                        <option value="<?= @$classFinded->lab_class; ?>">
+                        <option value="<?= @$classFinded->lab_class; ?>" hidden>
                             <?= @$classFinded->name_classroom ? @$classFinded->name_classroom : 'Select one'; ?>
                         </option>
                         <?php if (@$classrooms) {
@@ -68,7 +68,7 @@
                 <div class="form-group col-6">
                     <label for="exampleInputBorderWidth2">Professor:</label>
                     <select readonly class="form-control input-group" name="inpProfessor" id="inpProfessor">
-                        <option value="<?= @$classFinded->id_person; ?>">
+                        <option value="<?= @$classFinded->id_person; ?>" hidden>
                             <?= @$classFinded->name_person ? (@$classFinded->name_person . ' ' . @$classFinded->lastname_person) : 'Select one'; ?>
                         </option>
                         <?php if (@$profesors) {

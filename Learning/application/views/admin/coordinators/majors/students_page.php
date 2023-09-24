@@ -3,7 +3,6 @@ $session = $this->session->userdata("up_sess");
 if ($session->type_user == "Cordi") { ?>
     <div class="row">
         <div class="col-lg-4 col-4">
-            <!-- small card -->
             <div class="small-box bg-info">
                 <div class="inner">
                     <h3>Registrations</h3>
@@ -19,13 +18,10 @@ if ($session->type_user == "Cordi") { ?>
                 </a>
             </div>
         </div>
-        <!-- ./col -->
         <div class="col-lg-4 col-4">
-            <!-- small card -->
             <div class="small-box bg-success">
                 <div class="inner">
                     <h3>Show Active</h3>
-
                     <p>
                         <?= $active ?> Students
                     </p>
@@ -38,13 +34,10 @@ if ($session->type_user == "Cordi") { ?>
                 </a>
             </div>
         </div>
-        <!-- ./col -->
         <div class="col-lg-4 col-4">
-            <!-- small card -->
             <div class="small-box bg-warning">
                 <div class="inner">
                     <h3>Show Inactive</h3>
-
                     <p>
                         <?= $inactive ?> Students
                     </p>
@@ -57,8 +50,6 @@ if ($session->type_user == "Cordi") { ?>
                 </a>
             </div>
         </div>
-        <!-- ./col -->
-
     </div>
 <?php } ?>
 <section class="content">

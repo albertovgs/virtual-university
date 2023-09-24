@@ -46,7 +46,7 @@
                 <div class="col-6 form-group">
                     <label>Partial:</label>
                     <select type="text" class="form-control" name="inpPart" id="inpPart">
-                        <option value="<?= @$class->part_classwork; ?>">
+                        <option value="<?= @$class->part_classwork; ?>" hidden>
                             <?= @$class->part_classwork ? $class->part_classwork : 'Select one'; ?>
                         </option>
                         <option>Firts</option>
@@ -56,7 +56,7 @@
                 <div class="col-6 form-group">
                     <label>Rate by:</label>
                     <select type="text" class="form-control" name="inpRate" id="inpRate">
-                        <option value="<?= @$class->type_classwork; ?>">
+                        <option value="<?= @$class->type_classwork; ?>" hidden>
                             <?= @$class->type_classwork ? $class->type_classwork : 'Select one'; ?>
                         </option>
                         <option>To be</option>

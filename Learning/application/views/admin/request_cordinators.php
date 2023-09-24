@@ -1,11 +1,11 @@
-<button type="button" id="btn_new_rqst" data-toggle="modal" data-target="#req" class="btn btn-primary btn-sm"><i
-        class="fas fa-pen-nib"></i>New Request</button>
+<button type="button" id="btn_new_rqst" data-toggle="modal" data-target="#req" class="btn btn-primary btn-sm">
+    <i class="fas fa-pen-nib"></i>New Request
+</button>
 <br /><br />
 <section class="content row">
     <?php if (@$requests) {
         foreach (@$requests as $key => $req) {
             ?>
-            <!-- Default box -->
             <div class="col-lg-4 col-md-3 col-12">
                 <div class="card card-primary collapsed-card">
                     <div class="card-header">
@@ -20,13 +20,10 @@
                                 </button>
                             </div>
                         </div>
-                        <!-- /.card-tools -->
                     </div>
-                    <!-- /.card-header -->
                     <div class="card-body">
                         <?= $req->request ?>
                     </div>
-                    <!-- /.card-body -->
                 </div>
             </div>
         <?php }

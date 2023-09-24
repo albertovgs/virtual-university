@@ -50,7 +50,7 @@
           <label for="exampleInputBorderWidth2">Gender:</label>
           <select <?= @$titulo == "Shutdown" ? 'hidden' : ''; ?> class="form-control input-group" name="inpGender"
             id="inpGender">
-            <option value="<?= @$profesorFinded->gender_person ? $profesorFinded->gender_person : ''; ?>">
+            <option value="<?= @$profesorFinded->gender_person ? $profesorFinded->gender_person : ''; ?>" hidden>
               <?= @$profesorFinded->gender_person ? ($profesorFinded->gender_person == "M" ? "Male" : "Female") : 'Select one'; ?>
             </option>
             <option value="M">Male</option>

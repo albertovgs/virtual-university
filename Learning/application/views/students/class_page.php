@@ -1,6 +1,5 @@
 <?php $session = $this->session->userdata('up_sess'); ?>
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <div class="content-header">
         <div class="container">
             <div class="row mb-2">
@@ -8,9 +7,9 @@
                     <h1 class="m-0">
                         <?= @$class->name_class; ?> <small>Class</small>
                     </h1>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+                </div>
+            </div>
+        </div>
     </div>
     <div class="content">
         <div class="container">
@@ -159,10 +158,8 @@
 
                 </div>
             </div>
-            <!-- /.col-md-6 -->
         </div>
-        <!-- /.row -->
-    </div><!-- /.container-fluid -->
+    </div>
 </div>
 
 <div class=" modal fade" id="modal_classwork" style="display: none;" aria-hidden="true" tabindex="-1">

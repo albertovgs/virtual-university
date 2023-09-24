@@ -54,11 +54,10 @@
         <div class="form-group col-6">
           <label for="exampleInputBorderWidth2">Gender:</label>
           <select class="form-control input-group" name="inpGender" id="inpGender" <?= @$titulo == "Shutdown" ? 'readonly' : ''; ?>>
-            <option value="<?= @$profesorFinded->gender_person ? $profesorFinded->gender_person : ''; ?>"
-              <?= @$profesorFinded->gender_person ? 'hidden' : ''; ?>>
+            <option value="<?= @$profesorFinded->gender_person ? $profesorFinded->gender_person : ''; ?> hidden>
               <?= @$profesorFinded->gender_person ? ($profesorFinded->gender_person == "M" ? "Male" : "Female") : 'Select one'; ?>
             </option>
-            <option value="M">Male</option>
+            <option value=" M">Male</option>
             <option value="F">Female</option>
           </select>
         </div>
@@ -71,6 +70,7 @@
     </div>
   </form>
 </div>
+
 <script>
   $(function () {
     $('#datemask').inputmask("yyyy/mm/dd", {

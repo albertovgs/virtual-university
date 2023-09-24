@@ -5,7 +5,6 @@ if (@$comments) {
     if ($iCom->status_comment == 'Active') {
       ?>
       <div class="card-comment">
-        <!-- User image -->
         <?php if ($iCom->img_user) { ?>
           <img src="<?= $iCom->img_user; ?>" class="img-circle elevation-2" alt="User Image">
         <?php } ?>
@@ -17,7 +16,7 @@ if (@$comments) {
             <span class="text-muted float-right">
               <?= @$iCom->update_date_comment; ?>
             </span>
-          </span><!-- /.username -->
+          </span>
           <?= @$iCom->content_comment; ?>
 
           <?php if ($iCom->id_user == $session->id_user) {
@@ -38,7 +37,6 @@ if (@$comments) {
                 </button></span>
           <?php } ?>
         </div>
-        <!-- /.comment-text -->
       </div>
     <?php }
   }

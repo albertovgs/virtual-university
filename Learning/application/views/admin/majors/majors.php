@@ -39,21 +39,17 @@
                       <i class="fas fa-plus"></i>
                     </button>
                   </div>
-                  <!-- /.card-tools -->
                 </div>
-                <!-- /.card-header -->
                 <div class="card-body" style="display: none;">
                   <h3 class="card-title mb-0">Cooridinator -
                     <?= @$major->name_person . ' ' . @$major->lastname_person; ?>
                   </h3><br />
-                  <h3 class="card-title mb-0">Active students number -
-                    <?= $num[$n] ?>
+                  <h3 class="card-title mb-0">
+                    Active students number - <?= $num[$n] ?>
                   </h3><br />
                   <?= @$major->desc_major; ?>
                 </div>
-                <!-- /.card-body -->
               </div>
-              <!-- /.card -->
             </div>
           </div>
         </div>
