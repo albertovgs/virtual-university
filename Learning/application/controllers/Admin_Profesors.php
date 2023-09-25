@@ -39,43 +39,15 @@ class Admin_Profesors extends CI_Controller
 	{
 		if ($this->input->is_ajax_request()) {
 			if ($this->input->get('option')) {
-				if ($this->input->get('option') == "edit") {
-					$filter                 = array(
-						"id_person" => $this->input->get('code'),
-					);
-					$data['option']         = $this->input->get('option');
-					$data["profesorFinded"] = $this->DAO->profesorsTable($filter, TRUE);
-					echo $this->load->view('admin/profesors/profesors_registration_form', $data, TRUE);
-				} else if ($this->input->get('option') == "inactivate") {
-					$filter                 = array(
-						"id_person" => $this->input->get('code'),
-					);
-					$data['option']         = $this->input->get('option');
-					$data["profesorFinded"] = $this->DAO->profesorsTable($filter, TRUE);
-					echo $this->load->view('admin/profesors/profesors_registration_form', $data, TRUE);
-				} else if ($this->input->get('option') == "details") {
-					$filter                 = array(
-						"id_person" => $this->input->get('code'),
-					);
-					$data['option']         = $this->input->get('option');
-					$data["profesorFinded"] = $this->DAO->profesorsTable($filter, TRUE);
-					echo $this->load->view('admin/profesors/profesors_registration_form', $data, TRUE);
-				} else if ($this->input->get('option') == "reactive") {
-					$filter                 = array(
-						"id_person" => $this->input->get('code'),
-					);
-					$data["profesorFinded"] = $this->DAO->profesorsTable($filter, TRUE);
-					$data['code']           = $this->input->get('code');
-					$data['option']         = $this->input->get('option');
-					echo $this->load->view('admin/profesors/profesors_registration_form', $data, TRUE);
-				} else {
-					$filter                 = array(
-						"id_person" => $this->input->get('code'),
-					);
-					$data['option']         = $this->input->get('option');
-					$data["profesorFinded"] = $this->DAO->profesorsDetails($filter, TRUE);
-					echo $this->load->view('admin/profesors/profesors_registration_form', $data, TRUE);
+				$filter = array(
+					"id_person" => $this->input->get('code'),
+				);
+				if ($this->input->get('option') == "reactive") {
+					$data['code'] = $this->input->get('code');
 				}
+				$data['option']         = $this->input->get('option');
+				$data["profesorFinded"] = $this->DAO->profesorsTable($filter, TRUE);
+				echo $this->load->view('admin/profesors/profesors_registration_form', $data, TRUE);
 			} else {
 				echo $this->load->view('admin/profesors/profesors_registration_form', null, TRUE);
 			}
