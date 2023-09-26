@@ -109,63 +109,46 @@ class Admin_Students extends CI_Controller
 			);
 			$data["groups"] = $this->DAO->queryEntity("tb_groups", $filter, FALSE);
 			if ($this->input->get('option')) {
-				if ($this->input->get('option') == "edit") {
-					$filter                = array(
-						"id_user" => $this->input->get('code'),
-					);
-					$data['option']        = $this->input->get('option');
-					$data["studentFinded"] = $this->DAO->StudentsTable($filter, TRUE);
-					$filter                = array(
-						"id_group" => $data["studentFinded"]->group_student,
-					);
-					$data["group"]         = $this->DAO->queryEntity("tb_groups", $filter, TRUE);
-					$filter                = array(
-						"major_group" => $data["studentFinded"]->id_major,
-					);
-					$data["groups"]        = $this->DAO->queryEntity("tb_groups", $filter, FALSE);
-					echo $this->load->view('admin/students/students_register_form', $data, TRUE);
-				} else if ($this->input->get('option') == "inactivate") {
-					$filter                = array(
-						"id_user" => $this->input->get('code'),
-					);
-					$data['option']        = $this->input->get('option');
-					$data["studentFinded"] = $this->DAO->StudentsTable($filter, TRUE);
-					$filter                = array(
-						"id_group" => $data["studentFinded"]->group_student,
-					);
-					$data["group"]         = $this->DAO->queryEntity("tb_groups", $filter, TRUE);
-					$filter                = array(
-						"id_student" => $this->input->get('code'),
-					);
-					$major                 = $this->DAO->queryEntity("tb_students", $filter, TRUE);
-					$filter                = array(
-						"id_major" => $major->major_student,
-					);
-					$data["majorStd"]      = $this->DAO->queryEntity("tb_majors", $filter, TRUE);
-					echo $this->load->view('admin/students/students_register_form', $data, TRUE);
-				} else if ($this->input->get('option') == "reactive") {
-					$data['code']          = $this->input->get('code');
-					$filter                = array(
-						"id_user" => $this->input->get('code'),
-					);
-					$data['option']        = $this->input->get('option');
-					$data["studentFinded"] = $this->DAO->StudentsTable($filter, TRUE);
-					$filter                = array(
-						"major_group" => $data["studentFinded"]->id_major,
-					);
-					$data["groups"]        = $this->DAO->queryEntity("tb_groups", $filter, FALSE);
-					echo $this->load->view('admin/students/students_register_form', $data, TRUE);
-				} else {
-					$filter                = array(
-						"id_user" => $this->input->get('code'),
-					);
-					$data['option']        = $this->input->get('option');
-					$data["studentFinded"] = $this->DAO->StudentsTable($filter, TRUE);
-					echo $this->load->view('admin/students/students_register_form', $data, TRUE);
+				$data['option']        = $this->input->get('option');
+				$filter                = array(
+					"id_user" => $this->input->get('code'),
+				);
+				$data["studentFinded"] = $this->DAO->StudentsTable($filter, TRUE);
+				switch ($this->input->get('option')) {
+					case 'edit':
+						$filter = array(
+							"id_group" => $data["studentFinded"]->group_student,
+						);
+						$data["group"] = $this->DAO->queryEntity("tb_groups", $filter, TRUE);
+						$filter = array(
+							"major_group" => $data["studentFinded"]->id_major,
+						);
+						$data["groups"] = $this->DAO->queryEntity("tb_groups", $filter, FALSE);
+						break;
+					case 'inactivate':
+						$filter = array(
+							"id_group" => $data["studentFinded"]->group_student,
+						);
+						$data["group"] = $this->DAO->queryEntity("tb_groups", $filter, TRUE);
+						$filter = array(
+							"id_student" => $this->input->get('code'),
+						);
+						$major = $this->DAO->queryEntity("tb_students", $filter, TRUE);
+						$filter = array(
+							"id_major" => $major->major_student,
+						);
+						$data["majorStd"] = $this->DAO->queryEntity("tb_majors", $filter, TRUE);
+						break;
+					case 'reactive':
+						$data['code'] = $this->input->get('code');
+						$filter = array(
+							"major_group" => $data["studentFinded"]->id_major,
+						);
+						$data["groups"] = $this->DAO->queryEntity("tb_groups", $filter, FALSE);
+						break;
 				}
-			} else {
-				echo $this->load->view('admin/students/students_register_form', $data, TRUE);
 			}
+			echo $this->load->view('admin/students/students_register_form', $data, TRUE);
 		} else {
 			return array(
 				"status" => "error",
