@@ -25,28 +25,30 @@ class Majors extends CI_Controller
     {
         if ($this->input->is_ajax_request()) {
             if ($this->input->get('id')) {
-                if ($this->input->get('op') == "P") {
-                    $data["id"] = $this->input->get('id');
-                    echo $this->load->view('admin/coordinators/majors/periods_page', $data, TRUE);
-                } else if ($this->input->get('op') == "G") {
-                    $data["id"] = $this->input->get('id');
-                    echo $this->load->view('admin/coordinators/majors/groups_page', $data, TRUE);
-                } elseif ($this->input->get('op') == "S") {
-                    $data["id"]       = $this->input->get('id');
-                    $filter           = array(
-                        "major_student" => $this->input->get('id'),
-                        "status_user" => "Active",
-                    );
-                    $data["active"]   = count($this->DAO->StudentsTable($filter, FALSE));
-                    $filter           = array(
-                        "major_student" => $this->input->get('id'),
-                        "status_user" => "Inactive",
-                    );
-                    $data["inactive"] = count($this->DAO->StudentsTable($filter, FALSE));
-                    echo $this->load->view('admin/coordinators/majors/students_page', $data, TRUE);
-                } elseif ($this->input->get('op') == "C") {
-                    $data["id"] = $this->input->get('id');
-                    echo $this->load->view('admin/coordinators/majors/classes_page', $data, TRUE);
+                $data["id"] = $this->input->get('id');
+                switch ($this->input->get('op')) {
+                    case 'P':
+                        echo $this->load->view('admin/coordinators/majors/periods_page', $data, TRUE);
+                        break;
+                    case 'G':
+                        echo $this->load->view('admin/coordinators/majors/groups_page', $data, TRUE);
+                        break;
+                    case 'S':
+                        $filter = array(
+                            "major_student" => $this->input->get('id'),
+                            "status_user" => "Active",
+                        );
+                        $data["active"] = count($this->DAO->StudentsTable($filter, FALSE));
+                        $filter = array(
+                            "major_student" => $this->input->get('id'),
+                            "status_user" => "Inactive",
+                        );
+                        $data["inactive"] = count($this->DAO->StudentsTable($filter, FALSE));
+                        echo $this->load->view('admin/coordinators/majors/students_page', $data, TRUE);
+                        break;
+                    case 'C':
+                        echo $this->load->view('admin/coordinators/majors/classes_page', $data, TRUE);
+                        break;
                 }
             }
         }
