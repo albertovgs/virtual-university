@@ -7,7 +7,6 @@ class Select2 extends CI_Controller
   function __construct()
   {
     parent::__construct();
-    //$this->_check_session();
     $this->load->model('DAO');
   }
 

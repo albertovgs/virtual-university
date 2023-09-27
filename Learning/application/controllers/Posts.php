@@ -236,7 +236,7 @@ class Posts extends CI_Controller
 					$response = array(
 						"status" => "Incorrecto",
 						"errors" => $this->form_validation->error_array(),
-						"test" => "" //$test
+						"test" => "",
 					);
 				}
 			} else {
@@ -407,36 +407,6 @@ class Posts extends CI_Controller
 			);
 		}
 	}
-
-	// function usuario_foto()
-	// {
-	// 	$this->form_validation->set_rules('usuario_id', 'Usuario', 'required');
-	// 	if ($this->form_validation->run() == FALSE) {
-	// 		$response = array(
-	// 			"status" => "error",
-	// 			"message" => "Validaciones fallidas",
-	// 			"validations" => $this->form_validation->error_array()
-	// 		);
-	// 	} else {
-	// 		$config['upload_path'] = "./files/";
-	// 		$config['allowed_types'] = "jpg|npg|jpeg|webp";
-	// 		$config['max_size'] = 2048;
-	// 		$config['file_name'] = uniqid();
-	// 		$this->load->library('upload', $config);
-	// 		if ($this->upload->do_upload('fichero')) {
-	// 			$data = array(
-	// 				"usuario_foto" => $this->upload->data()['file_name'],
-	// 			);
-	// 			$response = $this->DAO->registrarFoto($data, $this->input->post('usuario_id'));
-	// 		} else {
-	// 			$response =  array(
-	// 				"status" => "error",
-	// 				"message" => "Error al subir el archivo debido a: " . $this->upload->display_errors()
-	// 			);
-	// 		}
-	// 	}
-	// 	echo "";
-	// }
 
 	private function _check_session()
 	{
