@@ -199,61 +199,67 @@ class Majors extends CI_Controller
             $this->form_validation->set_rules('inpDateStart', 'Start date', 'required');
             $this->form_validation->set_rules('inpDateEnd', 'End date', 'required');
 
-            if ($this->form_validation->run()) {
-                $session = $this->session->userdata('up_sess');
-                $filter  = array(
-                    "cordi_major" => $session->id_user,
-                    "id_major" => $this->input->post("inpMajor"),
-                );
-                $major   = $this->DAO->queryEntity("tb_majors", $filter, TRUE);
-                if ($major) {
-                    $filter = array(
-                        "cordi_major" => $session->id_user,
-                        "type_period" => "Current",
-                        "fk_major" => $major->id_major,
-                    );
-                    $period = $this->DAO->getPeriods($filter, TRUE);
-                    if (!$period) {
-                        $this->DAO->trans_begin();
-                        $filter   = array(
-                            "name_period" => $this->input->post("inpNameP"),
-                            "type_period" => "Current",
-                        );
-                        $cperiod  = $this->DAO->queryEntity("tb_periods", $filter, TRUE);
-                        $data     = array(
-                            "fk_period" => $cperiod->id_period,
-                            "fk_major" => $this->input->post("inpMajor"),
-                        );
-                        $response = $this->DAO->saveAndEditDats("tb_periods_major", $data);
-                        $complete = $this->DAO->trans_end();
-
-                        if ($complete) {
-                            $response = array(
-                                "status" => "success",
-                                "message" => "The period was created successfuly.",
-                            );
-                        } else {
-                            $response = array(
-                                "status" => "error",
-                                "message" => "There was a problem.",
-                            );
-                        }
-                    } else {
-                        $response = array(
-                            "status" => "error",
-                            "message" => "Alrready exist a period for this major.",
-                        );
-                    }
-                } else {
-                    $response = array(
-                        "status" => "error",
-                        "message" => "Data is incorrect.",
-                    );
-                }
-            } else {
+            if (!$this->form_validation->run()) {
                 $response = array(
                     "status" => "error",
                     "errors" => $this->form_validation->error_array(),
+                );
+                echo json_encode($response);
+                return;
+            }
+
+            $session = $this->session->userdata('up_sess');
+            $filter  = array(
+                "cordi_major" => $session->id_user,
+                "id_major" => $this->input->post("inpMajor"),
+            );
+            $major   = $this->DAO->queryEntity("tb_majors", $filter, TRUE);
+            if (!$major) {
+                $response = array(
+                    "status" => "error",
+                    "message" => "Data is incorrect.",
+                );
+                echo json_encode($response);
+                return;
+            }
+
+            $filter = array(
+                "cordi_major" => $session->id_user,
+                "type_period" => "Current",
+                "fk_major" => $major->id_major,
+            );
+            $period = $this->DAO->getPeriods($filter, TRUE);
+            if ($period) {
+                $response = array(
+                    "status" => "error",
+                    "message" => "Alrready exist a period for this major.",
+                );
+                echo json_encode($response);
+                return;
+            }
+
+            $this->DAO->trans_begin();
+            $filter   = array(
+                "name_period" => $this->input->post("inpNameP"),
+                "type_period" => "Current",
+            );
+            $cperiod  = $this->DAO->queryEntity("tb_periods", $filter, TRUE);
+            $data     = array(
+                "fk_period" => $cperiod->id_period,
+                "fk_major" => $this->input->post("inpMajor"),
+            );
+            $response = $this->DAO->saveAndEditDats("tb_periods_major", $data);
+            $complete = $this->DAO->trans_end();
+
+            if ($complete) {
+                $response = array(
+                    "status" => "success",
+                    "message" => "The period was created successfuly.",
+                );
+            } else {
+                $response = array(
+                    "status" => "error",
+                    "message" => "There was a problem.",
                 );
             }
             echo json_encode($response);
@@ -513,115 +519,120 @@ class Majors extends CI_Controller
                 }
                 echo json_encode($response);
             } else {
-                if ($this->input->get("major")) {
-                    $this->form_validation->set_rules('inpClassName', 'Name', 'required|min_length[5]');
-                    $this->form_validation->set_rules('inpGroup', 'Clave group', 'required');
-                    $this->form_validation->set_rules('inpProfessor', 'Clave group', 'required');
-                    $this->form_validation->set_rules('inpclassRoom', 'classroom group', 'required');
-                    if ($this->form_validation->run()) {
-                        $session = $this->session->userdata('up_sess');
-                        $filter  = array(
-                            "id_major" => $this->input->get("major"),
-                        );
-                        $major   = $this->DAO->queryEntity("tb_majors", $filter, TRUE);
-                        if ($major->cordi_major == $session->id_user) {
-                            $filter = array(
-                                "id_user" => $this->input->post("inpProfessor"),
-                            );
-                            $prof   = $this->DAO->queryEntity("tb_users", $filter, TRUE);
-                            $filter = array(
-                                "id_group" => $this->input->post("inpGroup"),
-                            );
-                            $group  = $this->DAO->queryEntity("tb_groups", $filter, TRUE);
-                            if ($prof->status_user == "Active" && $group->status_group == "Active") {
-                                $filter    = array(
-                                    "type_period" => "Current",
-                                );
-                                $fk_period = $this->DAO->queryEntity("tb_periods", $filter, TRUE);
-                                if (!$fk_period) {
-                                    $response = array(
-                                        "status" => "error",
-                                        "message" => "There are any periods actives to assign.",
-                                    );
-                                    echo json_encode($response);
-                                    return 0;
-                                }
-                                if ($group->last_quarter == $fk_period->name_period) {
-                                    $filter = array(
-                                        "name_class" => $this->input->post("inpClassName"),
-                                        "name_period" => $fk_period->name_period,
-                                        "fk_group" => $this->input->post("inpGroup"),
-                                        "fk_profesor" => $this->input->post("inpProfessor"),
-                                    );
-                                    $exist  = $this->DAO->getClasses($filter, TRUE);
-                                    if ($exist) {
-                                        $response = array(
-                                            "status" => "error",
-                                            "message" => "This class already exist.",
-                                        );
-                                        echo json_encode($response);
-                                        return 0;
-                                    }
-                                    $classClave = $this->generateClave(5);
-                                    $this->DAO->trans_begin();
-                                    $data = array(
-                                        "name_class" => $this->input->post("inpClassName"),
-                                        "clave_class" => $classClave,
-                                        "lab_class" => $this->input->post("inpclassRoom"),
-                                    );
-                                    $this->DAO->saveAndEditDats("tb_classes", $data, null);
-                                    $id   = $this->DAO->obtain_id();
-                                    $data = array(
-                                        "fk_profesor" => $prof->id_user,
-                                        "fk_class" => $id,
-                                        "fk_period" => $fk_period->id_period,
-                                        "fk_group" => $group->id_group,
-                                    );
-                                    $this->DAO->saveAndEditDats("tb_group_Pro_Class", $data, null);
-                                    $data = array(
-                                        "be_rate" => 10,
-                                        "do_rate" => 40,
-                                        "know_rate" => 50,
-                                        "fk_class" => $id,
-                                    );
-                                    $this->DAO->saveAndEditDats("tb_class_rates", $data, null);
-                                    $complete = $this->DAO->trans_end();
-                                    if ($complete) {
-                                        $response = array(
-                                            "status" => "success",
-                                            "message" => $this->input->post("inpClassName") . " class was created successfuly.",
-                                        );
-                                    } else {
-                                        $response = $complete;
-                                    }
-                                } else {
-                                    $response = array(
-                                        "status" => "error",
-                                        "message" => "The group must be upgraded to the current period.",
-                                    );
-                                }
-                            } else {
-                                $response = array(
-                                    "status" => "error",
-                                    "message" => "The professor or the group are not active.",
-                                );
-                            }
-                        } else {
-                            $response = array(
-                                "status" => "error",
-                                "message" => "You dont have access to this major.",
-                            );
-                        }
-                    } else {
-                        $response = array(
-                            "status" => "error",
-                            "errors" => $this->form_validation->error_array(),
-                        );
-                    }
-                    echo json_encode($response);
-                } else {
+                if (!$this->input->get("major")) {
                     redirect("Home");
+                    return;
                 }
+                $this->form_validation->set_rules('inpClassName', 'Name', 'required|min_length[5]');
+                $this->form_validation->set_rules('inpGroup', 'Clave group', 'required');
+                $this->form_validation->set_rules('inpProfessor', 'Clave group', 'required');
+                $this->form_validation->set_rules('inpclassRoom', 'classroom group', 'required');
+                if (!$this->form_validation->run()) {
+                    $response = array(
+                        "status" => "error",
+                        "errors" => $this->form_validation->error_array(),
+                    );
+                    echo json_encode($response);
+                    return;
+                }
+                $session = $this->session->userdata('up_sess');
+                $filter  = array(
+                    "id_major" => $this->input->get("major"),
+                );
+                $major   = $this->DAO->queryEntity("tb_majors", $filter, TRUE);
+                if ($major->cordi_major != $session->id_user) {
+                    $response = array(
+                        "status" => "error",
+                        "message" => "You dont have access to this major.",
+                    );
+                    echo json_encode($response);
+                    return;
+                }
+                $filter = array(
+                    "id_user" => $this->input->post("inpProfessor"),
+                );
+                $prof   = $this->DAO->queryEntity("tb_users", $filter, TRUE);
+                $filter = array(
+                    "id_group" => $this->input->post("inpGroup"),
+                );
+                $group  = $this->DAO->queryEntity("tb_groups", $filter, TRUE);
+                if ($prof->status_user != "Active" && $group->status_group != "Active") {
+                    $response = array(
+                        "status" => "error",
+                        "message" => "The professor or the group are not active.",
+                    );
+                    echo json_encode($response);
+                    return;
+                }
+
+                $filter    = array(
+                    "type_period" => "Current",
+                );
+                $fk_period = $this->DAO->queryEntity("tb_periods", $filter, TRUE);
+                if (!$fk_period) {
+                    $response = array(
+                        "status" => "error",
+                        "message" => "There are any periods actives to assign.",
+                    );
+                    echo json_encode($response);
+                    return;
+                }
+                if ($group->last_quarter != $fk_period->name_period) {
+                    $response = array(
+                        "status" => "error",
+                        "message" => "The group must be upgraded to the current period.",
+                    );
+                    echo json_encode($response);
+                    return;
+                }
+                $filter = array(
+                    "name_class" => $this->input->post("inpClassName"),
+                    "name_period" => $fk_period->name_period,
+                    "fk_group" => $this->input->post("inpGroup"),
+                    "fk_profesor" => $this->input->post("inpProfessor"),
+                );
+                $exist  = $this->DAO->getClasses($filter, TRUE);
+                if ($exist) {
+                    $response = array(
+                        "status" => "error",
+                        "message" => "This class already exist.",
+                    );
+                    echo json_encode($response);
+                    return;
+                }
+                $classClave = $this->generateClave(5);
+                $this->DAO->trans_begin();
+                $data = array(
+                    "name_class" => $this->input->post("inpClassName"),
+                    "clave_class" => $classClave,
+                    "lab_class" => $this->input->post("inpclassRoom"),
+                );
+                $this->DAO->saveAndEditDats("tb_classes", $data, null);
+                $id   = $this->DAO->obtain_id();
+                $data = array(
+                    "fk_profesor" => $prof->id_user,
+                    "fk_class" => $id,
+                    "fk_period" => $fk_period->id_period,
+                    "fk_group" => $group->id_group,
+                );
+                $this->DAO->saveAndEditDats("tb_group_Pro_Class", $data, null);
+                $data = array(
+                    "be_rate" => 10,
+                    "do_rate" => 40,
+                    "know_rate" => 50,
+                    "fk_class" => $id,
+                );
+                $this->DAO->saveAndEditDats("tb_class_rates", $data, null);
+                $complete = $this->DAO->trans_end();
+                if ($complete) {
+                    $response = array(
+                        "status" => "success",
+                        "message" => $this->input->post("inpClassName") . " class was created successfuly.",
+                    );
+                } else {
+                    $response = $complete;
+                }
+                echo json_encode($response);
             }
         } else {
             redirect("Home");
@@ -638,19 +649,17 @@ class Majors extends CI_Controller
                 );
                 $major   = $this->DAO->queryEntity("tb_majors", $filter, TRUE);
                 if ($major->cordi_major == $session->id_user) {
-                    //echo json_encode($this->input->get("status"));
                     if ($this->input->get("status") == "inactive") {
                         $type           = "Past";
                         $data["option"] = $this->input->get("status");
                     } else {
                         $type = "Current";
                     }
-                    $filter          = array(
+                    $filter            = array(
                         "major_group" => $this->input->get("id"),
                         "type_period" => $type,
                     );
-                    $data["classes"] = $this->DAO->getClasses($filter, FALSE);
-                    //echo json_encode($data["classes"]);
+                    $data["classes"]   = $this->DAO->getClasses($filter, FALSE);
                     $data["schedules"] = $this->DAO->queryEntity("tb_schedules", null, FALSE);
                     $data["id"]        = $this->input->get("id");
                     echo $this->load->view("admin/coordinators/majors/classes_table", $data, true);
