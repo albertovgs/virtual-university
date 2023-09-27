@@ -73,82 +73,82 @@ class Majors extends CI_Controller
 
     public function openGroupForm()
     {
-        if ($this->input->is_ajax_request()) {
-            if ($this->input->get('id')) {
-                if ($this->input->post('inpMajor')) {
-                    if ($this->input->post('inpMajor') == $this->input->get('id')) {
-                        $filter        = array(
-                            "id_major" => $this->input->get('id'),
-                        );
-                        $data['major'] = $this->DAO->queryEntity("tb_majors", $filter, TRUE);
-                        $session       = $this->session->userdata('up_sess');
-                        if ($data['major']->cordi_major == $session->id_user) {
-                            $filter              = array(
-                                "major_group" => $data['major']->id_major,
-                            );
-                            $ng                  = $this->DAO->count("tb_groups", $filter);
-                            $filter              = array(
-                                "type_period" => "Current",
-                            );
-                            $data["period"]      = $this->DAO->queryEntity("tb_periods", $filter, TRUE);
-                            $data["clave_group"] = $data['major']->clave_major . "-" . ($ng + 1);
-                            $this->DAO->trans_begin();
-                            $data_grp = array(
-                                "clave_group" => $data["clave_group"],
-                                "major_group" => $data['major']->id_major,
-                                "nmb_students" => 0,
-                                "last_quarter" => $data["period"]->name_period,
-                            );
-                            $this->DAO->saveAndEditDats("tb_groups", $data_grp);
-                            $id      = $this->DAO->obtain_id();
-                            $data_gp = array(
-                                "fk_group" => $id,
-                                "fk_period" => $data["period"]->id_period,
-                            );
-                            $this->DAO->saveAndEditDats("tb_periods_groups", $data_gp);
-                            $complete = $this->DAO->trans_end();
-                            if ($complete) {
-                                $response = array(
-                                    "status" => "success",
-                                    "message" => "The new group was created successfuly.",
-                                );
-                            } else {
-                                $response = array(
-                                    "status" => "error",
-                                    "message" => "There was an error, contact the dev.",
-                                );
-                            }
-                        } else {
-                            $response = array(
-                                "status" => "error",
-                                "message" => "You can not create a group in this major.",
-                            );
-                        }
-                    } else {
-                        $response = array(
-                            "status" => "error",
-                            "message" => "There was a problem.",
-                        );
-                    }
-                    echo json_encode($response);
-                } else {
-                    $filter              = array(
-                        "id_major" => $this->input->get('id'),
-                    );
-                    $data["id"]          = $this->input->get('id');
-                    $data['major']       = $this->DAO->queryEntity("tb_majors", $filter, TRUE);
-                    $filter              = array(
-                        "major_group" => $data['major']->id_major,
-                    );
-                    $ng                  = $this->DAO->count("tb_groups", $filter);
-                    $filter              = array(
-                        "type_period" => "Current",
-                    );
-                    $data["period"]      = $this->DAO->queryEntity("tb_periods", $filter, TRUE);
-                    $data["clave_group"] = $data['major']->clave_major . "-" . ($ng + 1);
-                    echo $this->load->view('admin/coordinators/majors/group_form', $data, TRUE);
-                }
+        if ($this->input->is_ajax_request() && $this->input->get('id')) {
+            if (!$this->input->post('inpMajor')) {
+                $filter              = array(
+                    "id_major" => $this->input->get('id'),
+                );
+                $data["id"]          = $this->input->get('id');
+                $data['major']       = $this->DAO->queryEntity("tb_majors", $filter, TRUE);
+                $filter              = array(
+                    "major_group" => $data['major']->id_major,
+                );
+                $ng                  = $this->DAO->count("tb_groups", $filter);
+                $filter              = array(
+                    "type_period" => "Current",
+                );
+                $data["period"]      = $this->DAO->queryEntity("tb_periods", $filter, TRUE);
+                $data["clave_group"] = $data['major']->clave_major . "-" . ($ng + 1);
+                echo $this->load->view('admin/coordinators/majors/group_form', $data, TRUE);
+                return;
             }
+            if ($this->input->post('inpMajor') != $this->input->get('id')) {
+                $response = array(
+                    "status" => "error",
+                    "message" => "There was a problem.",
+                );
+                echo json_encode($response);
+                return;
+            }
+            $filter        = array(
+                "id_major" => $this->input->get('id'),
+            );
+            $data['major'] = $this->DAO->queryEntity("tb_majors", $filter, TRUE);
+            $session       = $this->session->userdata('up_sess');
+            if ($data['major']->cordi_major != $session->id_user) {
+                $response = array(
+                    "status" => "error",
+                    "message" => "You can not create a group in this major.",
+                );
+                echo json_encode($response);
+                return;
+            }
+            $filter              = array(
+                "major_group" => $data['major']->id_major,
+            );
+            $ng                  = $this->DAO->count("tb_groups", $filter);
+            $filter              = array(
+                "type_period" => "Current",
+            );
+            $data["period"]      = $this->DAO->queryEntity("tb_periods", $filter, TRUE);
+            $data["clave_group"] = $data['major']->clave_major . "-" . ($ng + 1);
+            $this->DAO->trans_begin();
+            $data_grp = array(
+                "clave_group" => $data["clave_group"],
+                "major_group" => $data['major']->id_major,
+                "nmb_students" => 0,
+                "last_quarter" => $data["period"]->name_period,
+            );
+            $this->DAO->saveAndEditDats("tb_groups", $data_grp);
+            $id      = $this->DAO->obtain_id();
+            $data_gp = array(
+                "fk_group" => $id,
+                "fk_period" => $data["period"]->id_period,
+            );
+            $this->DAO->saveAndEditDats("tb_periods_groups", $data_gp);
+            $complete = $this->DAO->trans_end();
+            if ($complete) {
+                $response = array(
+                    "status" => "success",
+                    "message" => "The new group was created successfuly.",
+                );
+            } else {
+                $response = array(
+                    "status" => "error",
+                    "message" => "There was an error, contact the dev.",
+                );
+            }
+            echo json_encode($response);
         }
     }
 
