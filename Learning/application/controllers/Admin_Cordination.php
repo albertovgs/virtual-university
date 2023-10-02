@@ -243,6 +243,8 @@ class Admin_Cordination extends CI_Controller
 	function email()
 	{
 		$email = '';
+		$at    = "@learning.edu";
+
 		$array = explode(' ', $this->input->post('inpName'));
 		$i     = 0;
 		foreach ($array as $palabra) {
@@ -259,7 +261,7 @@ class Admin_Cordination extends CI_Controller
 			break;
 		}
 		$email = $email . $arr2;
-		$temp  = $email . "@learning.edu";
+		$temp  = $email . $at;
 		$temp  = strtolower($temp);
 		$exist = $this->DAO->queryEntity("tb_users", $filter = array("email_user" => $temp), TRUE);
 		if ($exist) {
@@ -269,7 +271,7 @@ class Admin_Cordination extends CI_Controller
 				$email = $email . $arr1[1][0];
 			}
 			$email = $email . $arr2;
-			$test  = $email . "@learning.edu";
+			$test  = $email . $at;
 			$exist = $this->DAO->queryEntity("tb_users", array("email_user" => $test), TRUE);
 			if ($exist) {
 				$date = explode('-', $this->input->post('inpBirthday'));
@@ -277,12 +279,12 @@ class Admin_Cordination extends CI_Controller
 					$dt = $d;
 					break;
 				}
-				$test = $email . $dt . "@learning.edu";
+				$test = $email . $dt . $at;
 			} else {
-				$email = $email . "@learning.edu";
+				$email = $email . $at;
 			}
 		} else {
-			$email = $email . "@learning.edu";
+			$email = $email . $at;
 		}
 		$email = strtolower($email);
 		return $email;
