@@ -88,105 +88,100 @@ class Admin_Cordination extends CI_Controller
 	function proces_coordinator_form()
 	{
 		if ($this->input->is_ajax_request()) {
-			if ($this->input->post("option") && $this->input->post("code")) {
-				$extValidation = FALSE;
-			} else {
-				$extValidation = TRUE;
-			}
 			$this->form_validation->set_rules("inpName", "Name", "required|min_length[3]|max_length[60]");
 			$this->form_validation->set_rules("inpLastname", "Last Name", "required|min_length[5]|max_length[60]");
 			$this->form_validation->set_rules("inpBirthday", "Birthday", "required|date");
 			$this->form_validation->set_rules("inpGender", "Gender", "required");
 			$this->form_validation->set_rules("inpID", "ID", "required|min_length[8]|max_length[12]");
-			if ($this->form_validation->run()) {
-				if ($extValidation) {
-					$exist = $this->DAO->queryEntity("tb_users", $filter = array("IDUser" => $this->input->post('inpID')), TRUE);
-					if (!$exist) {
-						$data  = array(
-							"name_person" => $this->input->post('inpName'),
-							"lastname_person" => $this->input->post('inpLastname'),
-							"birthday_person" => $this->input->post('inpBirthday'),
-							"gender_person" => $this->input->post('inpGender'),
-							"creation_date_person" => "default",
-							"update_date_person" => "default",
-						);
-						$email = $this->email();
-						$this->DAO->trans_begin();
-						$test     = $this->DAO->saveAndEditDats("tb_people", $data, NULL);
-						$user_id  = $this->DAO->obtain_id();
-						$password = $this->generatePassword(6);
-						if ($this->input->post('inpGender') == "M") {
-							$user_img = base_url() . "/resources/dist/img/user_boy_one.webp";
-						} else {
-							$user_img = base_url() . "/resources/dist/img/user_girl_one.webp";
-						}
-						$data     = array(
-							"id_user" => $user_id,
-							"IDUser" => $this->input->post('inpID'),
-							"email_user" => $email,
-							"img_user" => $user_img,
-							"password_tem_user" => $password,
-							"password_user" => $password,
-							"type_user" => "Cordi",
-						);
-						$test     = $this->DAO->saveAndEditDats("tb_users", $data, NULL);
-						$complete = $this->DAO->trans_end();
-						if ($complete) {
-							$response = array(
-								"status" => "success",
-								"message" => "Register successful, this is the temporary password-> " . $password
-							);
-						} else {
-							$response = array(
-								"status" => "error",
-								"errors" => $test,
-							);
-						}
-					} else {
-						$response = array(
-							"status" => "error",
-							"message" => "User already exist.",
-						);
-					}
-				} else if ($this->input->post("option") == "edit") {
-					$data     = array(
-						"name_person" => $this->input->post('inpName'),
-						"lastname_person" => $this->input->post('inpLastname'),
-						"birthday_person" => $this->input->post('inpBirthday'),
-						"gender_person" => $this->input->post('inpGender'),
-						"update_date_person" => "default",
-					);
-					$filter   = array(
-						"id_person" => $this->input->post('code'),
-					);
-					$complete = $this->DAO->saveAndEditDats("tb_people", $data, $filter);
-					$data     = array(
-						"IDUser" => $this->input->post('inpID'),
-					);
-					$filter   = array(
-						"id_user" => $this->input->post('code'),
-					);
-					$complete = $this->DAO->saveAndEditDats("tb_users", $data, $filter);
-					if ($complete) {
-						$response = array(
-							"status" => "success",
-							"message" => "Register successful",
-						);
-					} else {
-						$response = array(
-							"status" => "error",
-							"errors" => $this->form_validation->error_array(),
-						);
-					}
-				} else {
-					$response = $this->optionsProccess();
-				}
-			} else {
+			if (!$this->form_validation->run()) {
 				$response = array(
 					"status" => "error",
 					"errors" => $this->form_validation->error_array(),
 				);
 			}
+			if ($this->input->post("option") && $this->input->post("code")) {
+				$exist = $this->DAO->queryEntity("tb_users", $filter = array("IDUser" => $this->input->post('inpID')), TRUE);
+				if (!$exist) {
+					$data  = array(
+						"name_person" => $this->input->post('inpName'),
+						"lastname_person" => $this->input->post('inpLastname'),
+						"birthday_person" => $this->input->post('inpBirthday'),
+						"gender_person" => $this->input->post('inpGender'),
+						"creation_date_person" => "default",
+						"update_date_person" => "default",
+					);
+					$email = $this->email();
+					$this->DAO->trans_begin();
+					$this->DAO->saveAndEditDats("tb_people", $data, NULL);
+					$user_id  = $this->DAO->obtain_id();
+					$password = $this->generatePassword(6);
+					if ($this->input->post('inpGender') == "M") {
+						$user_img = base_url() . "/resources/dist/img/user_boy_one.webp";
+					} else {
+						$user_img = base_url() . "/resources/dist/img/user_girl_one.webp";
+					}
+					$data = array(
+						"id_user" => $user_id,
+						"IDUser" => $this->input->post('inpID'),
+						"email_user" => $email,
+						"img_user" => $user_img,
+						"password_tem_user" => $password,
+						"password_user" => $password,
+						"type_user" => "Cordi",
+					);
+					$this->DAO->saveAndEditDats("tb_users", $data, NULL);
+					$complete = $this->DAO->trans_end();
+					if ($complete) {
+						$response = array(
+							"status" => "success",
+							"message" => "Register successful, this is the temporary password-> " . $password
+						);
+					} else {
+						$response = array(
+							"status" => "error",
+							"errors" => "Something went wrong.",
+						);
+					}
+				} else {
+					$response = array(
+						"status" => "error",
+						"message" => "User already exist.",
+					);
+				}
+			} else if ($this->input->post("option") && $this->input->post("option") == "edit") {
+				$data     = array(
+					"name_person" => $this->input->post('inpName'),
+					"lastname_person" => $this->input->post('inpLastname'),
+					"birthday_person" => $this->input->post('inpBirthday'),
+					"gender_person" => $this->input->post('inpGender'),
+					"update_date_person" => "default",
+				);
+				$filter   = array(
+					"id_person" => $this->input->post('code'),
+				);
+				$complete = $this->DAO->saveAndEditDats("tb_people", $data, $filter);
+				$data     = array(
+					"IDUser" => $this->input->post('inpID'),
+				);
+				$filter   = array(
+					"id_user" => $this->input->post('code'),
+				);
+				$complete = $this->DAO->saveAndEditDats("tb_users", $data, $filter);
+				if ($complete) {
+					$response = array(
+						"status" => "success",
+						"message" => "Register successful",
+					);
+				} else {
+					$response = array(
+						"status" => "error",
+						"errors" => $this->form_validation->error_array(),
+					);
+				}
+			} else {
+				$response = $this->optionsProccess();
+			}
+
 			echo JSON_encode($response);
 		} else {
 			redirect('home');
