@@ -195,14 +195,14 @@ class Admin_Cordination extends CI_Controller
 
 				if ($this->form_validation->run()) {
 
-					$data     = array(
+					$data   = array(
 						"status_user" => $this->input->post("option") == "inactivate" ? 'Inactive' : 'Active',
 						"update_date_user" => "default",
 					);
-					$filter   = array(
+					$filter = array(
 						"id_user" => $this->input->post("code"),
 					);
-					$test     = $this->DAO->saveAndEditDats("tb_users", $data, $filter);
+					$this->DAO->saveAndEditDats("tb_users", $data, $filter);
 					$complete = $this->DAO->trans_end();
 					if ($complete) {
 						$response = array(
@@ -212,7 +212,7 @@ class Admin_Cordination extends CI_Controller
 					} else {
 						$response = array(
 							"status" => "error",
-							"errors" => $test,
+							"errors" => "Something went wrong.",
 						);
 					}
 				} else {
