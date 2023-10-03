@@ -181,7 +181,6 @@ class Admin_Cordination extends CI_Controller
 			} else {
 				$response = $this->optionsProccess();
 			}
-
 			echo JSON_encode($response);
 		} else {
 			redirect('home');
@@ -192,17 +191,12 @@ class Admin_Cordination extends CI_Controller
 	{
 		if ($this->input->is_ajax_request()) {
 			if ($this->input->post("code")) {
-				if ($this->input->post("option") == "inactivate") {
-					$extValidation = FALSE;
-				} else {
-					$extValidation = TRUE;
-				}
 				$this->form_validation->set_rules("code", "Code", "required");
 
 				if ($this->form_validation->run()) {
 
 					$data     = array(
-						"status_user" => $extValidation ? 'Active' : 'Inactive',
+						"status_user" => $this->input->post("option") == "inactivate" ? 'Inactive' : 'Active',
 						"update_date_user" => "default",
 					);
 					$filter   = array(
@@ -228,7 +222,6 @@ class Admin_Cordination extends CI_Controller
 					);
 				}
 				return $response;
-			} else {
 			}
 		} else {
 			return ('home');
