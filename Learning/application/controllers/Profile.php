@@ -63,6 +63,7 @@ class Profile extends CI_Controller
                         "message" => "There was a error, contact with the admin.",
                     );
                 }
+                return json_encode($response);
             }
         }
     }
