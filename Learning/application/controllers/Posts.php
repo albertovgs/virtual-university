@@ -13,34 +13,39 @@ class Posts extends CI_Controller
 	function showContent()
 	{
 		if ($this->input->is_ajax_request()) {
-			if ($this->input->get('status') == "Adver") {
-				$data['posts'] = $this->DAO->getAdvertisements();
-				echo $this->load->view('admin/coordinators/posts/posts_page', $data, TRUE);
-			} else if ($this->input->get('status') == "Major") {
-				$session        = $this->session->userdata('up_sess');
-				$filter         = array(
-					"cordi_major" => $session->id_user,
-					"status_major" => "Active",
-				);
-				$data['majors'] = $this->DAO->queryEntity("tb_majors", $filter, FALSE);
-				$n              = 0;
-				foreach ($data['majors'] as $mj) {
-					$n += 1;
+			$session = $this->session->userdata('up_sess');
+			switch ($this->input->get('status')) {
+				case 'Adver':
+					$data['posts'] = $this->DAO->getAdvertisements();
+					echo $this->load->view('admin/coordinators/posts/posts_page', $data, TRUE);
+					break;
+				case 'Major':
 					$filter = array(
-						"major_student" => $mj->id_major,
-						"status_user" => "Active",
+						"cordi_major" => $session->id_user,
+						"status_major" => "Active",
 					);
-
-					$data["num"][$n] = count($this->DAO->StudentsTable($filter, FALSE));
-				}
-				echo $this->load->view('admin/coordinators/majors/major_content', $data, TRUE);
-			} else if ($this->input->get('status') == "Request") {
-				$session          = $this->session->userdata('up_sess');
-				$filter           = array(
-					"id_user_request" => $session->id_user,
-				);
-				$data["requests"] = $this->DAO->queryEntity("tb_requests", $filter, False);
-				echo $this->load->view('admin/request_cordinators', $data, TRUE);
+					$data['majors'] = $this->DAO->queryEntity("tb_majors", $filter, FALSE);
+					$n = 0;
+					foreach ($data['majors'] as $mj) {
+						$n += 1;
+						$filter          = array(
+							"major_student" => $mj->id_major,
+							"status_user" => "Active",
+						);
+						$data["num"][$n] = count($this->DAO->StudentsTable($filter, FALSE));
+					}
+					echo $this->load->view('admin/coordinators/majors/major_content', $data, TRUE);
+					break;
+				case 'Request':
+					$filter = array(
+						"id_user_request" => $session->id_user,
+					);
+					$data["requests"] = $this->DAO->queryEntity("tb_requests", $filter, False);
+					echo $this->load->view('admin/request_cordinators', $data, TRUE);
+					break;
+				default:
+					redirect('home');
+					break;
 			}
 		} else {
 			redirect('home');
@@ -116,12 +121,11 @@ class Posts extends CI_Controller
 					"cordi_major" => $session->id_user,
 				);
 				$data['majors']         = $this->DAO->queryEntity("tb_majors", $filter, FALSE);
-				echo $this->load->view('admin/coordinators/posts/post_form', $data, TRUE);
 			} else {
 				$data["title"]  = "Create";
 				$data['majors'] = $this->DAO->queryEntity("tb_majors", array(), FALSE);
-				echo $this->load->view('admin/coordinators/posts/post_form', $data, TRUE);
 			}
+			echo $this->load->view('admin/coordinators/posts/post_form', $data, TRUE);
 		}
 	}
 
@@ -256,41 +260,28 @@ class Posts extends CI_Controller
 	function confirmation()
 	{
 		if ($this->input->is_ajax_request()) {
-			if ($this->input->get("ps") && $this->input->get("op")) {
-				if ($this->input->get("itm") == "post") {
-					if ($this->input->get("op") == "delete") {
-						$data = array(
-							"status_advertisement" => "Inactive",
-						);
-					} else if ($this->input->get("op") == "active") {
-						$data = array(
-							"status_advertisement" => "Active",
-						);
-					}
-					$filter = array(
-						"id_advertisement" => $this->input->get("ps"),
-					);
-					$table  = "tb_advertisements";
-				} else if ($this->input->get("itm") == "comment") {
-					if ($this->input->get("op") == "delete") {
-						$data = array(
-							"status_comment" => "Inactive",
-						);
-					} else if ($this->input->get("op") == "active") {
-						$data = array(
-							"status_comment" => "Active",
-						);
-					}
-					$filter = array(
-						"id_comment" => $this->input->get("ps"),
-					);
-					$table  = "tb_comments";
-				}
-				$response = $this->DAO->saveAndEditDats($table, $data, $filter);
-				echo JSON_encode($response);
-			} else {
+			if (!$this->input->get("ps") && !$this->input->get("op")) {
 				redirect('');
 			}
+			if ($this->input->get("itm") == "post") {
+				$data   = array(
+					"status_advertisement" => $this->input->get("op") == "delete" ? "Inactive" : "Active"
+				);
+				$filter = array(
+					"id_advertisement" => $this->input->get("ps"),
+				);
+				$table  = "tb_advertisements";
+			} else if ($this->input->get("itm") == "comment") {
+				$data   = array(
+					"status_comment" => $this->input->get("op") == "delete" ? "Inactive" : "Active"
+				);
+				$filter = array(
+					"id_comment" => $this->input->get("ps"),
+				);
+				$table  = "tb_comments";
+			}
+			$response = $this->DAO->saveAndEditDats($table, $data, $filter);
+			echo JSON_encode($response);
 		} else {
 			redirect('');
 		}
@@ -299,20 +290,19 @@ class Posts extends CI_Controller
 	function openCommentForm()
 	{
 		if ($this->input->is_ajax_request()) {
-			if ($this->input->get('ps') && $this->input->get('us')) {
-				$filtro        = array(
-					'id_advertisement' => $this->input->get('ps'),
-					'fk_user_advertisement' => $this->input->get('us'),
-				);
-				$advertisement = $this->DAO->queryEntity('tb_advertisements', $filtro, TRUE);
+			if (!$this->input->get('ps') && !$this->input->get('us')) {
+				redirect('home');
+			}
+			$filtro        = array(
+				'id_advertisement' => $this->input->get('ps'),
+				'fk_user_advertisement' => $this->input->get('us'),
+			);
+			$advertisement = $this->DAO->queryEntity('tb_advertisements', $filtro, TRUE);
 
-				if ($advertisement) {
-					$data['accion']        = $this->input->get('accion');
-					$data['advertisement'] = $advertisement;
-					echo $this->load->view('admin/coordinators/posts/comments/comments_page', $data, TRUE);
-				} else {
-					echo 'error';
-				}
+			if ($advertisement) {
+				$data['accion']        = $this->input->get('accion');
+				$data['advertisement'] = $advertisement;
+				echo $this->load->view('admin/coordinators/posts/comments/comments_page', $data, TRUE);
 			} else {
 				echo 'error';
 			}
@@ -379,12 +369,12 @@ class Posts extends CI_Controller
 	{
 		$session = $this->session->userdata('up_sess');
 		if ($this->input->post('eComm')) {
+			$this->DAO->trans_begin();
 			$data = array(
 				"content_comment" => $this->input->post('eComm'),
 				"fk_user_comment" => $session->id_user,
 			);
 
-			$this->DAO->trans_begin();
 			$response = $this->DAO->saveAndEditDats('tb_comments', $data, );
 			$id       = $this->DAO->obtain_id();
 			$data     = array(
@@ -392,8 +382,8 @@ class Posts extends CI_Controller
 				"fk_comment" => $id,
 			);
 			$response = $this->DAO->saveAndEditDats('tb_advertisements_comments', $data, );
-			$complete = $this->DAO->trans_end();
-			if ($complete) {
+
+			if ($this->DAO->trans_end()) {
 				$response = array(
 					"status" => "success",
 					"message" => "Register successfuly",
