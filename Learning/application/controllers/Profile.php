@@ -51,8 +51,8 @@ class Profile extends CI_Controller
                 } else {
                     redirect('');
                 }
-                $success = $this->DAO->saveAndEditDats("tb_requests", $data, $filter);
-                if ($success) {
+
+                if ($this->DAO->saveAndEditDats("tb_requests", $data, $filter)) {
                     $response = array(
                         "status" => "success",
                         "message" => "Request was acepted",
@@ -72,17 +72,13 @@ class Profile extends CI_Controller
     {
         if ($this->input->is_ajax_request()) {
             if ($this->input->get("code") && $this->input->get("option")) {
+                $data["id"]     = "confirmationProc";
+                $data["code"]   = $this->input->get('code');
+                $data["option"] = $this->input->get('option');
                 if ($this->input->get("option") == "active") {
-                    $data["id"]      = "confirmationProc";
                     $data["message"] = "Are you sure about confirm this request.";
-                    $data["code"]    = $this->input->get('code');
-                    $data["option"]  = $this->input->get('option');
                 } elseif ($this->input->get("option") == "delete") {
-                    $data["id"]      = "confirmationProc";
                     $data["message"] = "Are you sure about reject this request.";
-                    $data["option"]  = $this->input->get('option');
-                    $data["code"]    = $this->input->get('code');
-                    $data["option"]  = $this->input->get('option');
                 } else {
                     redirect('');
                 }
