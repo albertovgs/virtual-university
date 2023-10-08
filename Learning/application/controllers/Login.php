@@ -18,10 +18,15 @@ class Login extends CI_Controller
 	{
 		$this->load->model("DAO");
 		if ($this->input->post("inpEmail") && $this->input->post("inpPassword")) {
-			$user_exist = $dats = $this->DAO->login($this->input->post("inpEmail"), $this->input->post("inpPassword"));
+			$user_exist = $this->DAO->login($this->input->post("inpEmail"), $this->input->post("inpPassword"));
+			echo json_encode($user_exist);
 			if ($user_exist["status"] == "success") {
-				$this->session->set_userdata("up_sess", $user_exist["data"]);
-				redirect("");
+				if ($user_exist["data"]->status_user != "Inactive") {
+					$this->session->set_userdata("up_sess", $user_exist["data"]);
+					redirect("");
+				}
+				$this->session->set_flashdata("error_login", "Your account isn't active.");
+				redirect("login");
 			} else {
 				$this->session->set_flashdata("error_login", $user_exist["message"]);
 				redirect("login");
