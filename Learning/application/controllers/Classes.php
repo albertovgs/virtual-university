@@ -13,7 +13,9 @@ class Classes extends CI_Controller
     function index()
     {
         if ($this->input->get('id')) {
-            $filter             = array("clave_class" => $this->input->get('id'));
+            $filter             = array(
+                "clave_class" => $this->input->get('id'),
+            );
             $data["class"]      = $this->DAO->getClasses($filter, TRUE);
             $filter             = array(
                 "fk_period" => $data["class"]->id_period,
@@ -47,18 +49,30 @@ class Classes extends CI_Controller
     {
         $session = $this->session->userdata('up_sess');
         if ($session->type_user == "Teacher") {
-            $filter             = array("fk_classwork" => $this->input->get('clswkid'));
+            $filter             = array(
+                "fk_classwork" => $this->input->get('clswkid'),
+            );
             $data["classworks"] = $this->DAO->clsWrkStd($filter, False);
             $filter             = array(
                 "id_gpc" => $this->input->get('gpc'),
                 "fk_profesor" => $session->id_user,
             );
             $data["class"]      = $this->DAO->getClasses($filter, TRUE);
-            $data["count"]      = $this->DAO->count("tb_std_classworks", array("fk_classwork" => $this->input->get('clswkid')));
+            $data["count"]      = $this->DAO->count(
+                "tb_std_classworks",
+                array(
+                    "fk_classwork" => $this->input->get('clswkid'),
+                )
+            );
         } elseif ($session->type_user == "Studen") {
-            $filter               = array("fk_classwork" => $this->input->get('clswkid'), "fk_student" => $session->id_user);
+            $filter               = array(
+                "fk_classwork" => $this->input->get('clswkid'),
+                "fk_student" => $session->id_user,
+            );
             $data["classworkStd"] = $this->DAO->clsWrkStd($filter, TRUE);
-            $filter               = array("id_classwork" => $this->input->get('clswkid'));
+            $filter               = array(
+                "id_classwork" => $this->input->get('clswkid'),
+            );
             $data["classwork"]    = $this->DAO->queryEntity("tb_classworks", $filter, TRUE);
             $filter               = array(
                 "id_gpc" => $this->input->get('gpc'),
@@ -143,12 +157,11 @@ class Classes extends CI_Controller
                     $data["cls"] = $this->input->get('cls');
                     echo $this->load->view('students/class_form', $data, TRUE);
                 } else {
-                    $filter        = array(
+                    $filter         = array(
                         "id_classwork" => $this->input->get('wrk'),
                     );
-                    $data["wrk"]   = $this->input->get('wrk');
-                    $data['class'] = $this->DAO->queryEntity("tb_classworks", $filter, TRUE);
-                    //echo json_encode($filter);
+                    $data["wrk"]    = $this->input->get('wrk');
+                    $data['class']  = $this->DAO->queryEntity("tb_classworks", $filter, TRUE);
                     $data["option"] = $this->input->get('opt');
                     echo $this->load->view('students/class_form', $data, TRUE);
                 }
@@ -194,11 +207,12 @@ class Classes extends CI_Controller
                     $this->form_validation->set_rules('inpRate', 'Rate', 'required');
 
                     if (!$this->form_validation->run()) {
-                        $response = array(
-                            "status" => "error",
-                            "errors" => $this->form_validation->error_array(),
+                        echo json_encode(
+                            array(
+                                "status" => "error",
+                                "errors" => $this->form_validation->error_array(),
+                            )
                         );
-                        echo json_encode($response);
                         return 0;
                     }
                 }
@@ -212,11 +226,12 @@ class Classes extends CI_Controller
 
                 $class = $this->DAO->getClasses($filter, TRUE);
                 if (!$class) {
-                    $response = array(
-                        "status" => "error",
-                        "message" => "You do not have access to this class.",
+                    echo json_encode(
+                        array(
+                            "status" => "error",
+                            "message" => "You do not have access to this class.",
+                        )
                     );
-                    echo json_encode($response);
                     return 0;
                 }
                 $data = array(
@@ -254,40 +269,42 @@ class Classes extends CI_Controller
 
     function delClassworsForm()
     {
-        if ($this->input->is_ajax_request()) {
-            if ($this->input->post('inpOp') == "drop" && $this->input->post('inpId') && $this->input->get('cls')) {
-                $session       = $this->session->userdata('up_sess');
-                $filter        = array("id_class" => $this->input->get('cls'), "id_person" => $session->id_user);
-                $data["class"] = $this->DAO->getClasses($filter, TRUE);
-                if ($data["class"]) {
-                    $filter = array(
-                        "id_classwork" => $this->input->post('inpId'),
+        if (!$this->input->is_ajax_request()) {
+            redirect("Home");
+        }
+        if ($this->input->post('inpOp') == "drop" && $this->input->post('inpId') && $this->input->get('cls')) {
+            $session       = $this->session->userdata('up_sess');
+            $filter        = array(
+                "id_class" => $this->input->get('cls'),
+                "id_person" => $session->id_user,
+            );
+            $data["class"] = $this->DAO->getClasses($filter, TRUE);
+            if ($data["class"]) {
+                $filter = array(
+                    "id_classwork" => $this->input->post('inpId'),
+                );
+                $data   = array(
+                    "status_classwork" => "Inactive",
+                );
+                $save   = $this->DAO->saveAndEditDats("tb_classworks", $data, $filter);
+                if ($save["status"] == "success") {
+                    $response = array(
+                        "status" => "success",
+                        "message" => "The Classwok " . $this->input->post("inpTitle") . " was removed successfuly."
                     );
-                    $data   = array(
-                        "status_classwork" => "Inactive",
-                    );
-                    $save   = $this->DAO->saveAndEditDats("tb_classworks", $data, $filter);
-                    if ($save["status"] == "success") {
-                        $response = array(
-                            "status" => "success",
-                            "message" => "The Classwok " . $this->input->post("inpTitle") . " was removed successfuly."
-                        );
-                    } else {
-                        $response = array(
-                            "status" => "error",
-                            "message" => "There was a problem.",
-                        );
-                    }
                 } else {
                     $response = array(
                         "status" => "error",
-                        "message" => "You do not have access to this class.",
+                        "message" => "There was a problem.",
                     );
                 }
-                echo json_encode($response);
             } else {
-                redirect("Home");
+                $response = array(
+                    "status" => "error",
+                    "message" => "You do not have access to this class.",
+                );
             }
+            echo json_encode($response);
         } else {
             redirect("Home");
         }
