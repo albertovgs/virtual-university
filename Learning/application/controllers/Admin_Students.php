@@ -68,8 +68,7 @@ class Admin_Students extends CI_Controller
 					"password_tem_user" => $password,
 					"password_user" => $password,
 				);
-				$success  = $this->DAO->saveAndEditDats("tb_users", $data, $filter);
-				if ($success) {
+				if ($this->DAO->saveAndEditDats("tb_users", $data, $filter)) {
 					$response = array(
 						"status" => "success",
 						"message" => "Reset the password complete, password: " . $password
@@ -171,7 +170,7 @@ class Admin_Students extends CI_Controller
 					$filter = array(
 						"id_user" => $this->input->post("code"),
 					);
-					$test   = $this->DAO->saveAndEditDats("tb_users", $data, $filter);
+					$this->DAO->saveAndEditDats("tb_users", $data, $filter);
 					$filter = array("id_group" => $this->input->post('inpGroup'));
 					$nmb    = $this->DAO->queryEntity("tb_groups", $filter, TRUE);
 					if ($this->input->post("option") == "inactivate") {
@@ -179,7 +178,7 @@ class Admin_Students extends CI_Controller
 							"nmb_students" => $nmb->nmb_students - 1
 						);
 						$filter = array("id_group" => $this->input->post('inpGroup'));
-						$test   = $this->DAO->saveAndEditDats("tb_groups", $data, $filter);
+						$this->DAO->saveAndEditDats("tb_groups", $data, $filter);
 					} else {
 						$filter = array(
 							"id_student" => $this->input->post("code"),
@@ -187,26 +186,23 @@ class Admin_Students extends CI_Controller
 						$data   = array(
 							"group_student" => $this->input->post("inpGroup"),
 						);
-						//echo json_encode($data);
-						$test   = $this->DAO->saveAndEditDats("tb_students", $data, $filter);
+						$this->DAO->saveAndEditDats("tb_students", $data, $filter);
 						$data   = array(
 							"nmb_students" => $nmb->nmb_students + 1
 						);
 						$filter = array("id_group" => $this->input->post('inpGroup'));
-						$test   = $this->DAO->saveAndEditDats("tb_groups", $data, $filter);
+						$errors = $this->DAO->saveAndEditDats("tb_groups", $data, $filter);
 					}
 
-					$complete = $this->DAO->trans_end();
-					if ($complete) {
+					if ($this->DAO->trans_end()) {
 						$response = array(
 							"status" => "success",
 							"message" => "Action complete successful",
-							"test" => $test,
 						);
 					} else {
 						$response = array(
 							"status" => "error",
-							"errors" => $test,
+							"errors" => "Contact to the admin.",
 						);
 					}
 				} else {
@@ -225,7 +221,12 @@ class Admin_Students extends CI_Controller
 				$this->form_validation->set_rules("inpGroup", "Group", "required");
 				if ($this->form_validation->run()) {
 					if ($this->input->post("option") != "edit") {
-						$exist = $this->DAO->queryEntity("tb_users", $filter = array("IDUser" => $this->input->post("inpID")));
+						$exist = $this->DAO->queryEntity(
+							"tb_users",
+							$filter = array(
+								"IDUser" => $this->input->post("inpID"),
+							)
+						);
 						if ($exist) {
 							$response = array(
 								"status" => "error",
@@ -241,40 +242,32 @@ class Admin_Students extends CI_Controller
 								"update_date_person" => "default",
 							);
 							$this->DAO->trans_begin();
-							$test     = $this->DAO->saveAndEditDats("tb_people", $data, NULL);
-							$user_id  = $this->DAO->obtain_id();
-							$email    = $this->input->post('inpID') . "@learning.edu";
+							$this->DAO->saveAndEditDats("tb_people", $data, NULL);
 							$password = $this->generatePassword(6);
-							if ($this->input->post('inpGender') == "M") {
-								$user_img = base_url() . "/resources/dist/img/user_boy_one.webp";
-							} else {
-								$user_img = base_url() . "/resources/dist/img/user_girl_one.webp";
-							}
-							$data   = array(
-								"id_user" => $user_id,
+							$user_img = base_url() . "/resources/dist/img/" . $this->input->post('inpGender') == "M" ? "user_boy_one.webp" : "user_girl_one.webp";
+							$data     = array(
+								"id_user" => $this->DAO->obtain_id(),
 								"IDUser" => $this->input->post('inpID'),
-								"email_user" => $email,
+								"email_user" => $this->input->post('inpID') . "@learning.edu",
 								"img_user" => $user_img,
 								"password_tem_user" => $password,
 								"password_user" => $password,
 								"type_user" => "Studen",
 							);
-							$test   = $this->DAO->saveAndEditDats("tb_users", $data, NULL);
-							$data   = array(
-								"id_student" => $user_id,
+							$this->DAO->saveAndEditDats("tb_users", $data, NULL);
+							$data = array(
+								"id_student" => $this->DAO->obtain_id(),
 								"major_student" => $this->input->post('inpMajor'),
 								"group_student" => $this->input->post('inpGroup'),
 							);
-							$test   = $this->DAO->saveAndEditDats("tb_students", $data, NULL);
+							$this->DAO->saveAndEditDats("tb_students", $data, NULL);
 							$filter = array("id_group" => $this->input->post('inpGroup'));
 							$nmb    = $this->DAO->queryEntity("tb_groups", $filter, TRUE);
 							$data   = array(
 								"nmb_students" => $nmb->nmb_students + 1
 							);
-							$test   = $this->DAO->saveAndEditDats("tb_groups", $data, $filter);
-							//echo json_encode($test);
-							$complete = $this->DAO->trans_end();
-							if ($complete) {
+							$this->DAO->saveAndEditDats("tb_groups", $data, $filter);
+							if ($this->DAO->trans_end()) {
 								$response = array(
 									"status" => "success",
 									"message" => "Register successful, password: " . $password
@@ -282,7 +275,7 @@ class Admin_Students extends CI_Controller
 							} else {
 								$response = array(
 									"status" => "error",
-									"errors" => $test,
+									"errors" => "Contact to the admin.",
 								);
 							}
 						}
@@ -303,7 +296,6 @@ class Admin_Students extends CI_Controller
 							"id_student" => $this->input->post('code'),
 						);
 						$data["studentFinded"] = $this->DAO->StudentsTable($filter, TRUE);
-						//echo json_encode($data["studentFinded"]);
 						if ($data["studentFinded"]->group_student != $this->input->post('inpGroup')) {
 							$filter = array("id_group" => $data["studentFinded"]->group_student);
 							$nmb    = $this->DAO->queryEntity("tb_groups", $filter, TRUE);
@@ -324,8 +316,7 @@ class Admin_Students extends CI_Controller
 							);
 							$test   = $this->DAO->saveAndEditDats("tb_groups", $data, $filter);
 						}
-						$complete = $this->DAO->trans_end();
-						if ($complete) {
+						if ($this->DAO->trans_end()) {
 							$response = array(
 								"status" => "success",
 								"message" => "Register successful",
