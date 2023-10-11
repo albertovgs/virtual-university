@@ -64,19 +64,10 @@ class Home extends CI_Controller
 				$filter = array(
 					"id_request" => $this->input->post("inpId"),
 				);
-				if ($this->input->post("inpOp") == "active") {
-					$data = array(
-						"status_request" => "Accepted",
-					);
-				} elseif ($this->input->post("inpOp") == "delete") {
-					$data = array(
-						"status_request" => "Rejected",
-					);
-				} else {
-					redirect('');
-				}
-				$success = $this->DAO->saveAndEditDats("tb_requests", $data, $filter);
-				if ($success) {
+				$data   = array(
+					"status_request" => $this->input->post("inpOp") == "active" ? "Accepted" : "Rejected",
+				);
+				if ($this->DAO->saveAndEditDats("tb_requests", $data, $filter)) {
 					$response = array(
 						"status" => "success",
 						"message" => "Request was acepted",
@@ -96,26 +87,14 @@ class Home extends CI_Controller
 	{
 		if ($this->input->is_ajax_request()) {
 			if ($this->input->get("code") && $this->input->get("option")) {
-				if ($this->input->get("option") == "active") {
-					$data["id"]      = "confirmationProc";
-					$data["message"] = "Are you sure about confirm this request.";
-					$data["code"]    = $this->input->get('code');
-					$data["option"]  = $this->input->get('option');
-				} elseif ($this->input->get("option") == "delete") {
-					$data["id"]      = "confirmationProc";
-					$data["message"] = "Are you sure about reject this request.";
-					$data["option"]  = $this->input->get('option');
-					$data["code"]    = $this->input->get('code');
-					$data["option"]  = $this->input->get('option');
-				} else {
-					redirect('');
-				}
+				$data["id"]      = "confirmationProc";
+				$data["message"] = "Are you sure about " .
+					$this->input->get("option") == "active" ? "confirm" : "reject" .
+					" this request.";
+				$data["code"]    = $this->input->get('code');
+				$data["option"]  = $this->input->get('option');
 				echo $this->load->view("includes/confirmation", $data, TRUE);
-			} else {
-				$this;
 			}
-		} else {
-			redirect('');
 		}
 	}
 
