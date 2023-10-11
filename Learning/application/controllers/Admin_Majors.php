@@ -56,10 +56,8 @@ class Admin_Majors extends CI_Controller
 				);
 				$data['form']      = $this->input->get('option');
 				$data['majorFind'] = $this->DAO->getMajors($filter, TRUE);
-				echo $this->load->view('admin/majors/major_format', $data, True);
-			} else {
-				echo $this->load->view('admin/majors/major_format', $data, True);
 			}
+			echo $this->load->view('admin/majors/major_format', $data, True);
 		} else {
 			redirect('home');
 		}
@@ -67,22 +65,21 @@ class Admin_Majors extends CI_Controller
 
 	function register_major()
 	{
-		if ($this->input->is_ajax_request()) {
-			if ($this->input->post("inpOp")) {
-				if ($this->input->post("inpOp") == "edit") {
-					$this->update_major(TRUE);
-				} elseif ($this->input->post("inpOp") == "delete") {
-					$status = "Inactive";
-					$this->delete_major($status);
-				} elseif ($this->input->post("inpOp") == "active") {
-					$status = "Active";
-					$this->delete_major($status);
-				}
-			} else {
-				$this->update_major(FALSE);
+		if (!$this->input->is_ajax_request()) {
+			redirect('');
+		}
+		if ($this->input->post("inpOp")) {
+			if ($this->input->post("inpOp") == "edit") {
+				$this->update_major(TRUE);
+			} elseif ($this->input->post("inpOp") == "delete") {
+				$status = "Inactive";
+				$this->delete_major($status);
+			} elseif ($this->input->post("inpOp") == "active") {
+				$status = "Active";
+				$this->delete_major($status);
 			}
 		} else {
-			redirect('');
+			$this->update_major(FALSE);
 		}
 	}
 
@@ -97,29 +94,29 @@ class Admin_Majors extends CI_Controller
 				"status_major" => $status,
 			);
 			if ($status == "Active") {
-				$filter       = array(
+				$filter = array(
 					"id_user" => $this->input->post("inpCordi"),
 					"status_user" => "Active",
 					"type_user" => "Cordi",
 				);
-				$cordAccepted = $this->DAO->queryEntity("tb_users", $filter, TRUE);
-				if ($cordAccepted) {
-					$filter = array(
-						"id_major" => $this->input->post("inpId"),
+				if (!$this->DAO->queryEntity("tb_users", $filter, TRUE)) {
+					echo JSON_encode(
+						array(
+							"status" => "error",
+							"message" => "Cordination must be a cordinator.",
+						)
 					);
-					$query  = $this->DAO->saveAndEditDats("tb_majors", $data, $filter);
-				} else {
-					$response = array(
-						"status" => "error",
-						"message" => "Cordination must be a cordinator.",
-					);
+					return;
 				}
+				$filter = array(
+					"id_major" => $this->input->post("inpId"),
+				);
 			} else {
 				$filter = array(
 					"id_major" => $this->input->post("inpId"),
 				);
-				$query  = $this->DAO->saveAndEditDats("tb_majors", $data, $filter);
 			}
+			$query = $this->DAO->saveAndEditDats("tb_majors", $data, $filter);
 			if ($query["status"] == "success") {
 				$response = array(
 					"status" => "success",
@@ -146,12 +143,11 @@ class Admin_Majors extends CI_Controller
 		$this->form_validation->set_rules("inpCordi", "Cordination", "required|max_length[1]");
 		$this->form_validation->set_rules("inpDesc", "Description", "required");
 		if ($this->form_validation->run()) {
-			$filter       = array(
+			$filter = array(
 				"id_user" => $this->input->post("inpCordi"),
 				"type_user" => "Cordi",
 			);
-			$cordAccepted = $this->DAO->queryEntity("tb_users", $filter, TRUE);
-			if ($cordAccepted) {
+			if ($this->DAO->queryEntity("tb_users", $filter, TRUE)) {
 				$data = array(
 					"name_major" => $this->input->post("inpName"),
 					"desc_major" => $this->input->post("inpDesc"),
