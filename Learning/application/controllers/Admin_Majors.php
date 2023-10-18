@@ -93,7 +93,6 @@ class Admin_Majors extends CI_Controller
 			);
 			$filter = array(
 				"id_user" => $this->input->post("inpCordi"),
-				"status_user" => "Active",
 				"type_user" => "Cordi",
 			);
 			if (!$this->DAO->queryEntity("tb_users", $filter, TRUE)) {
