@@ -95,10 +95,11 @@ class Admin_Students extends CI_Controller
 			$session    = $this->session->userdata('up_sess');
 			$data["id"] = $this->input->get('major');
 			if ($session->type_user == "Admin") {
-				$data['majors'] = $this->DAO->queryEntity("tb_majors", null, FALSE);
+				$data['majors'] = $this->DAO->queryEntity("tb_majors", array("status_major" => "Active"), FALSE);
 			} else {
 				$filter         = array(
 					"id_major" => $this->input->get('major'),
+					"status_major" => "Active",
 				);
 				$data['majors'] = $this->DAO->queryEntity("tb_majors", $filter, FALSE);
 			}
