@@ -85,6 +85,7 @@ class Admin_Majors extends CI_Controller
 
 	function delete_major($status)
 	{
+		$this->form_validation->set_rules("inpCordi", "Cordination", "required|max_length[1]");
 		$this->form_validation->set_rules("inpId", "Major", "required");
 		if ($this->form_validation->run()) {
 			$data   = array(
