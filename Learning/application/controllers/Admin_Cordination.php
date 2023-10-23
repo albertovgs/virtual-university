@@ -116,9 +116,9 @@ class Admin_Cordination extends CI_Controller
 					$user_id  = $this->DAO->obtain_id();
 					$password = $this->generatePassword(6);
 					if ($this->input->post('inpGender') == "M") {
-						$user_img = base_url() . "/resources/dist/img/user_boy_one.webp";
+						$user_img = "/resources/dist/img/user_boy_one.webp";
 					} else {
-						$user_img = base_url() . "/resources/dist/img/user_girl_one.webp";
+						$user_img = "/resources/dist/img/user_girl_one.webp";
 					}
 					$data = array(
 						"id_user" => $user_id,

@@ -6,7 +6,7 @@ if (@$comments) {
       ?>
       <div class="card-comment">
         <?php if ($iCom->img_user) { ?>
-          <img src="<?= $iCom->img_user; ?>" class="img-circle elevation-2" alt="User Image">
+          <img src="<?= base_url(@$iCom->img_user); ?>" class="img-circle elevation-2" alt="User Image">
         <?php } ?>
 
         <div class="comment-text">
