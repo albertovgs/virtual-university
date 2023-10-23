@@ -85,38 +85,29 @@ class Admin_Majors extends CI_Controller
 
 	function delete_major($status)
 	{
-		if ($status == "Active") {
-			$this->form_validation->set_rules("inpCordi", "Cordination", "required|max_length[1]");
-		}
+		$this->form_validation->set_rules("inpCordi", "Cordination", "required|max_length[1]");
 		$this->form_validation->set_rules("inpId", "Major", "required");
 		if ($this->form_validation->run()) {
-			$data = array(
+			$data   = array(
 				"status_major" => $status,
 			);
-			if ($status == "Active") {
-				$filter = array(
-					"id_user" => $this->input->post("inpCordi"),
-					"status_user" => "Active",
-					"type_user" => "Cordi",
+			$filter = array(
+				"id_user" => $this->input->post("inpCordi"),
+				"type_user" => "Cordi",
+			);
+			if (!$this->DAO->queryEntity("tb_users", $filter, TRUE)) {
+				echo JSON_encode(
+					array(
+						"status" => "error",
+						"message" => "Cordination is not valid.",
+					)
 				);
-				if (!$this->DAO->queryEntity("tb_users", $filter, TRUE)) {
-					echo JSON_encode(
-						array(
-							"status" => "error",
-							"message" => "Cordination must be a cordinator.",
-						)
-					);
-					return;
-				}
-				$filter = array(
-					"id_major" => $this->input->post("inpId"),
-				);
-			} else {
-				$filter = array(
-					"id_major" => $this->input->post("inpId"),
-				);
+				return;
 			}
-			$query = $this->DAO->saveAndEditDats("tb_majors", $data, $filter);
+			$filter = array(
+				"id_major" => $this->input->post("inpId"),
+			);
+			$query  = $this->DAO->saveAndEditDats("tb_majors", $data, $filter);
 			if ($query["status"] == "success") {
 				$response = array(
 					"status" => "success",
@@ -146,6 +137,7 @@ class Admin_Majors extends CI_Controller
 			$filter = array(
 				"id_user" => $this->input->post("inpCordi"),
 				"type_user" => "Cordi",
+				"status_user" => "Active",
 			);
 			if ($this->DAO->queryEntity("tb_users", $filter, TRUE)) {
 				$data = array(
@@ -176,7 +168,7 @@ class Admin_Majors extends CI_Controller
 			} else {
 				$response = array(
 					"status" => "error",
-					"message" => "Cordination must be a cordinator.",
+					"message" => "Cordination must be valid.",
 				);
 			}
 		} else {

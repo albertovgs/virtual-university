@@ -34,8 +34,7 @@ if (@$form == "edit") {
         </div>
         <div class="form-group col-12">
           <label for="exampleInputBorderWidth2">Cordination:</label>
-          <select class="form-control input-group" <?= @$form == "delete" ? 'disabled' : ''; ?> name="inpCordi"
-            id="inpCordi">
+          <select class="form-control input-group" name="inpCordi" id="inpCordi">
             <?php if (@$majorFind) { ?>
               <option value="<?= @$majorFind->cordi_major; ?>">
                 <?= @$majorFind->name_person; ?>
@@ -45,7 +44,7 @@ if (@$form == "edit") {
             if (@$cordis) {
               foreach (@$cordis as $key => $cordi) {
                 ?>
-                <option value="<?= @$cordi->id_user; ?>">
+                <option value="<?= @$cordi->id_user; ?>" <?= @$form == "delete" ? 'disabled' : ''; ?>>
                   <?= @$cordi->name_person; ?>
                   <?= @$cordi->lastname_person; ?>
                 </option>
