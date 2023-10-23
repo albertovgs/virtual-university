@@ -281,6 +281,12 @@ class Posts extends CI_Controller
 				$table  = "tb_comments";
 			}
 			$response = $this->DAO->saveAndEditDats($table, $data, $filter);
+			if ($response["status"] == "success" && $this->input->get("itm") == "comment") {
+				$response = array(
+					"status" => "success",
+					"message" => "Comment " . ($this->input->get("op") == "delete" ? "deleted." : "action undid."),
+				);
+			}
 			echo JSON_encode($response);
 		} else {
 			redirect('');
