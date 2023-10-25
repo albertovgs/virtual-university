@@ -174,7 +174,7 @@
             var op = $(this).attr('data-op');
             var itm = $(this).attr('data-item');
             if (op == "delete") {
-                var btn = "<button type='button' class='btn btn-tool btn_delete_post' data-ps='" + ps + "' data-op='active' data-item='post' title='Undo'><i class='fas fa-undo'></i></button>";
+                var btn = "<button type='button' class='btn btn-tool btn_delete_post' data-ps='" + ps + "' data-op='active' data-item='" + itm + "' title='Undo'><i class='fa fa-undo'></i></button>";
             } else {
                 var btn = ""
             }
@@ -183,9 +183,8 @@
                 method: "post",
                 dataType: "json",
                 success: function (response) {
+                    $(document).find('#modal_comment').modal('hide');
                     if (response.status == "success") {
-                        $(document).find('#modal_comment').hide('hide');
-                        $(document).find('#modal_comment').modal('hide');
                         $(document).Toasts('create', {
                             title: 'Informaci&oacute;n',
                             class: 'bg-success',
@@ -194,7 +193,7 @@
                             body: response.message + btn
                         });
                     }
-                    load_content("Adver");
+                    if (itm == "post") load_content("Adver");
                 }
             });
         });

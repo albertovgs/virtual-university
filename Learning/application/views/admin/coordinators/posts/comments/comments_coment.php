@@ -31,8 +31,8 @@ if (@$comments) {
               </button></span>
           <?php } else if ($session->type_user == "Cordi") { ?>
               <span class="button-group-append float-right">
-                <button type="button" class="btn btn-tool btn_delete_post" data-codigo="<?= @$iCom->id_comment; ?>"
-                  data-opt="delete">
+                <button type="button" class="btn btn-tool btn_delete_post" data-ps="<?= @$iCom->id_comment; ?>" data-op="delete"
+                  data-item="comment">
                   <i class="fas fa-times"></i>
                 </button></span>
           <?php } ?>
