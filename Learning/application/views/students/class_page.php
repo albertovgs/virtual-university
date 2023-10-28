@@ -54,7 +54,7 @@
                                         </td>
                                         <td>
                                             <?php if ($session->type_user == "Teacher") { ?>
-                                                <button type="button" class="btn btn-block btn-info btn-sm btn_grade"
+                                                <button type="button" class="btn btn-block btn-info btn-sm btn_grades"
                                                     data-opt="second">Grade second part.</button>
                                             <?php } else {
                                                 echo @$grades->calf_s_class;
