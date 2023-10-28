@@ -36,7 +36,7 @@ if (@$form == "edit") {
           <label for="exampleInputBorderWidth2">Cordination:</label>
           <select class="form-control input-group" name="inpCordi" id="inpCordi">
             <?php if (@$majorFind) { ?>
-              <option value="<?= @$majorFind->cordi_major; ?>">
+              <option value="<?= @$majorFind->cordi_major; ?>" hidden>
                 <?= @$majorFind->name_person; ?>
                 <?= @$majorFind->lastname_person; ?>
               </option>

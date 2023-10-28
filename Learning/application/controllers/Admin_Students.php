@@ -244,6 +244,7 @@ class Admin_Students extends CI_Controller
 							);
 							$this->DAO->trans_begin();
 							$this->DAO->saveAndEditDats("tb_people", $data, NULL);
+							$user_id  = $this->DAO->obtain_id();
 							$password = $this->generatePassword(6);
 							$user_img = "/resources/dist/img/" . $this->input->post('inpGender') == "M" ? "user_boy_one.webp" : "user_girl_one.webp";
 							$data     = array(

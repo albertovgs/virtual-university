@@ -98,8 +98,9 @@ class Admin_Cordination extends CI_Controller
 					"status" => "error",
 					"errors" => $this->form_validation->error_array(),
 				);
+				echo JSON_encode($response);
 			}
-			if ($this->input->post("option") && $this->input->post("code")) {
+			if (!$this->input->post("option") && !$this->input->post("code")) {
 				$exist = $this->DAO->queryEntity("tb_users", $filter = array("IDUser" => $this->input->post('inpID')), TRUE);
 				if (!$exist) {
 					$data  = array(
@@ -142,11 +143,13 @@ class Admin_Cordination extends CI_Controller
 							"errors" => "Something went wrong.",
 						);
 					}
+					echo JSON_encode($response);
 				} else {
 					$response = array(
 						"status" => "error",
 						"message" => "User already exist.",
 					);
+					echo JSON_encode($response);
 				}
 			} else if ($this->input->post("option") && $this->input->post("option") == "edit") {
 				$data     = array(
@@ -178,10 +181,11 @@ class Admin_Cordination extends CI_Controller
 						"errors" => $this->form_validation->error_array(),
 					);
 				}
+				echo JSON_encode($response);
 			} else {
 				$response = $this->optionsProccess();
+				echo JSON_encode($response);
 			}
-			echo JSON_encode($response);
 		} else {
 			redirect('home');
 		}
@@ -215,13 +219,14 @@ class Admin_Cordination extends CI_Controller
 							"errors" => "Something went wrong.",
 						);
 					}
+					echo JSON_encode($response);
 				} else {
 					$response = array(
 						"status" => "error",
 						"errors" => $this->form_validation->error_array(),
 					);
+					echo JSON_encode($response);
 				}
-				return $response;
 			}
 		} else {
 			return ('home');

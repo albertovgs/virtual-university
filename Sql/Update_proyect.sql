@@ -30,7 +30,7 @@ CREATE TABLE tb_users(
     FOREIGN KEY (id_user) REFERENCES tb_people(id_person)
 );
 
-insert into tb_users values (1,10000001, 'admin@learning.edu','http://localhost/Learning/resources/dist/img/user_boy_one.webp','Hacker', default,"N",default,"Admin",default, default);
+insert into tb_users values (1,10000001, 'admin@learning.edu','/resources/dist/img/user_boy_one.webp','Hacker', default,"N",default,"Admin",default, default);
 
 CREATE TABLE tb_majors(
     id_major INT PRIMARY KEY NOT NULL AUTO_INCREMENT,

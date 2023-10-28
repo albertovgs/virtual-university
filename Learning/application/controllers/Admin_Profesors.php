@@ -87,7 +87,7 @@ class Admin_Profesors extends CI_Controller
 					$this->DAO->trans_begin();
 					$this->DAO->saveAndEditDats("tb_people", $data, NULL);
 					$password = $this->generatePassword(6);
-					$user_img = "/resources/dist/img/" . $this->input->post('inpGender') == "M" ? "user_boy_one.webp" : "user_girl_one.webp";
+					$user_img = "/resources/dist/img/" . ($this->input->post('inpGender') == "M" ? "user_boy_one.webp" : "user_girl_one.webp");
 					$data     = array(
 						"id_user" => $this->DAO->obtain_id(),
 						"IDUser" => $this->input->post('inpID'),
