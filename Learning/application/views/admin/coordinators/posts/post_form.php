@@ -1,6 +1,6 @@
 <form id="form_posts">
     <?php if (@$advertisements) { ?>
-        <input type="hidden" name="inpCode" id="inpCode" value="<?= @$find_post->id_advertisement; ?>">
+        <input type="hidden" name="inpCode" id="inpCode" value="<?= @$advertisements->id_advertisement; ?>">
         <input type="hidden" name="inpOpt" id="inpOpt" value="<?= @$accion; ?>">
     <?php } ?>
     <div class="modal-header">

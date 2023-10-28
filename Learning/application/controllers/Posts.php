@@ -224,9 +224,9 @@ class Posts extends CI_Controller
 				);
 
 				$filtro = array();
-				if (@$this->input->post('accion')) {
+				if (@$this->input->post('inpCode')) {
 					$filtro = array(
-						"post_id" => $this->input->post('codigo_p'),
+						"id_advertisement" => $this->input->post('inpCode'),
 					);
 				}
 				$response = $this->DAO->saveAndEditDats('tb_advertisements', $data, $filtro);
