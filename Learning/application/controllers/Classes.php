@@ -494,128 +494,140 @@ class Classes extends CI_Controller
 
     function GenGradesPart()
     {
-        if ($this->input->is_ajax_request()) {
-            if ($this->input->get('opt') && $this->input->get('gpc')) {
-                if ($this->input->get('opt') == "first") {
-                    $part_class = "Firts";
-                } else if ($this->input->post('opt') == "second") {
-                    $part_class = "Second";
-                } else {
-                    return 0;
+        if (!$this->input->is_ajax_request())
+            return;
+        if (!$this->input->get('opt') && !$this->input->get('gpc'))
+            return;
+        $part_class = $this->input->get('opt') == "first" ? "Firts" : "Second";
+
+        $session       = $this->session->userdata('up_sess');
+        $filter        = array(
+            "id_gpc" => $this->input->get('gpc'),
+            "fk_profesor" => $session->id_user,
+        );
+        $data["class"] = $this->DAO->getClasses($filter, TRUE);
+
+        if (!$data["class"])
+            return;
+
+        $filter           = array(
+            "fk_gpc" => $this->input->get('gpc'),
+            "part_classwork" => $part_class,
+            "type_classwork" => "To do",
+        );
+        $data["TodoNumb"] = $this->DAO->count("tb_classworks", $filter);
+
+        $filter           = array(
+            "fk_gpc" => $this->input->get('gpc'),
+            "part_classwork" => $part_class,
+            "type_classwork" => "To be",
+        );
+        $data["TobeNumb"] = $this->DAO->count("tb_classworks", $filter);
+
+        $filter             = array(
+            "fk_gpc" => $this->input->get('gpc'),
+            "part_classwork" => $part_class,
+            "type_classwork" => "To know",
+        );
+        $data["ToknowNumb"] = $this->DAO->count("tb_classworks", $filter);
+
+        $filter        = array(
+            "fk_class" => $data["class"]->id_class,
+        );
+        $data["rates"] = $this->DAO->queryEntity("tb_class_rates", $filter, TRUE);
+
+        $filter           = array(
+            "clave_group" => $data["class"]->clave_group,
+        );
+        $data["students"] = $this->DAO->StudentsTable($filter, FALSE);
+        $countPCC         = 0;
+        foreach ($data["students"] as $std) {
+            $filter           = array(
+                "fk_gpc" => $data["class"]->id_group,
+                "part_classwork" => $part_class,
+            );
+            $data["stdWorks"] = $this->DAO->studentsclsWrk($filter, FALSE);
+            $data["tdWorks"]  = 0;
+            $data["tbWorks"]  = 0;
+            $data["tkWorks"]  = 0;
+            $data["clfDo"]    = 0;
+            $data["clfBE"]    = 0;
+            $data["clfKnow"]  = 0;
+            foreach ($data["stdWorks"] as $stdWorks) {
+                if ($stdWorks->type_classwork == "To do") {
+                    $data["tdWorks"] = $data["tdWorks"] + 1;
+                    $data["clfDo"]   = $data["clfDo"] + $stdWorks->calf_classwork;
                 }
-                $session       = $this->session->userdata('up_sess');
-                $filter        = array("id_gpc" => $this->input->get('gpc'), "fk_profesor" => $session->id_user);
-                $data["class"] = $this->DAO->getClasses($filter, TRUE);
-                if ($data["class"]) {
-                    $filter             = array(
-                        "fk_gpc" => $this->input->get('gpc'),
-                        "part_classwork" => $part_class,
-                        "type_classwork" => "To do",
-                    );
-                    $data["TodoNumb"]   = $this->DAO->count("tb_classworks", $filter);
-                    $filter             = array(
-                        "fk_gpc" => $this->input->get('gpc'),
-                        "part_classwork" => $part_class,
-                        "type_classwork" => "To be",
-                    );
-                    $data["TobeNumb"]   = $this->DAO->count("tb_classworks", $filter);
-                    $filter             = array(
-                        "fk_gpc" => $this->input->get('gpc'),
-                        "part_classwork" => $part_class,
-                        "type_classwork" => "To know",
-                    );
-                    $data["ToknowNumb"] = $this->DAO->count("tb_classworks", $filter);
-                    $filter             = array(
-                        "fk_class" => $data["class"]->id_class,
-                    );
-                    $data["rates"]      = $this->DAO->queryEntity("tb_class_rates", $filter, TRUE);
-                    $filter             = array(
-                        "clave_group" => $data["class"]->clave_group,
-                    );
-                    $data["students"]   = $this->DAO->StudentsTable($filter, FALSE);
-                    $countPCC           = 0;
-                    foreach ($data["students"] as $std) {
-                        $filter           = array(
-                            "fk_gpc" => $data["class"]->id_group,
-                            "part_classwork" => $part_class,
-                        );
-                        $data["stdWorks"] = $this->DAO->studentsclsWrk($filter, FALSE);
-                        $data["tdWorks"]  = 0;
-                        $data["tbWorks"]  = 0;
-                        $data["tkWorks"]  = 0;
-                        $data["clfDo"]    = 0;
-                        $data["clfBE"]    = 0;
-                        $data["clfKnow"]  = 0;
-                        foreach ($data["stdWorks"] as $stdWorks) {
-                            if ($stdWorks->type_classwork == "To do") {
-                                $data["tdWorks"] = $data["tdWorks"] + 1;
-                                $data["clfDo"]   = $data["clfDo"] + $stdWorks->calf_classwork;
-                            }
-                            if ($stdWorks->type_classwork == "To be") {
-                                $data["tbWorks"] = $data["tdWorks"] + 1;
-                                $data["clfBE"]   = $data["clfBE"] + $stdWorks->calf_classwork;
-                            }
-                            if ($stdWorks->type_classwork == "To know") {
-                                $data["tkWorks"] = $data["tdWorks"] + 1;
-                                $data["clfKnow"] = $data["clfKnow"] + $stdWorks->calf_classwork;
-                            }
-                        }
-                        $ToDOgrade   = 0;
-                        $ToKnowgrade = 0;
-                        $ToBEgrade   = 0;
-                        if ($data["rates"]->be_rate != 0) {
-                            $ToBEgrade = ($data["clfBE"] / $data["TobeNumb"]) * (($data["rates"]->be_rate) / 100);
-                        }
-                        if ($data["rates"]->do_rate != 0) {
-                            $ToDOgrade = ($data["clfDo"] / $data["TodoNumb"]) * (($data["rates"]->do_rate) / 100);
-                        }
-                        if ($data["rates"]->know_rate != 0) {
-                            $ToKnowgrade = ($data["clfKnow"] / $data["ToknowNumb"]) * (($data["rates"]->know_rate) / 100);
-                        }
-                        $gradePart = $ToBEgrade + $ToDOgrade + $ToKnowgrade;
-                        if ($part_class == "Firts") {
-                            $datasv = array(
-                                "calf_f_class" => $gradePart,
-                                "fk_student" => $std->id_user,
-                                "fk_class" => $data["class"]->id_class,
-                            );
-                        } else {
-                            $datasv = array(
-                                "calf_s_class" => $gradePart,
-                                "fk_student" => $std->id_user,
-                                "fk_class" => $data["class"]->id_class,
-                            );
-                        }
-                        $filter  = array(
-                            "fk_student" => $std->id_user,
-                            "fk_class" => $data["class"]->id_class,
-                        );
-                        $stdCalf = $this->DAO->queryEntity("tb_std_cls_clf", $filter, TRUE);
-                        if ($stdCalf) {
-                            $filter = array("id_std_cls_clf" => $stdCalf->id_std_cls_clf);
-                            $comple = $this->DAO->saveAndEditDats("tb_std_cls_clf", $datasv, $filter);
-                        } else {
-                            $comple = $this->DAO->saveAndEditDats("tb_std_cls_clf", $datasv);
-                        }
-                        $countPCC += 1;
-                    }
-                    if ($countPCC == count($data["students"])) {
-                        $response = array(
-                            "status" => "success",
-                            "message" => "Grades was asigned successfuly.",
-                        );
-                    } else {
-                        $response = array(
-                            "status" => "error",
-                            "message" => "There was a problem.",
-                        );
-                    }
-                    echo json_encode($response);
-                } else {
-                    return 0;
+                if ($stdWorks->type_classwork == "To be") {
+                    $data["tbWorks"] = $data["tdWorks"] + 1;
+                    $data["clfBE"]   = $data["clfBE"] + $stdWorks->calf_classwork;
+                }
+                if ($stdWorks->type_classwork == "To know") {
+                    $data["tkWorks"] = $data["tdWorks"] + 1;
+                    $data["clfKnow"] = $data["clfKnow"] + $stdWorks->calf_classwork;
                 }
             }
+            $ToDOgrade   = 0;
+            $ToKnowgrade = 0;
+            $ToBEgrade   = 0;
+            if ($data["rates"]->be_rate != 0) {
+                $ToBEgrade = ($data["clfBE"] / $data["TobeNumb"]) * (($data["rates"]->be_rate) / 100);
+            }
+            if ($data["rates"]->do_rate != 0) {
+                $ToDOgrade = ($data["clfDo"] / $data["TodoNumb"]) * (($data["rates"]->do_rate) / 100);
+            }
+            if ($data["rates"]->know_rate != 0) {
+                $ToKnowgrade = ($data["clfKnow"] / $data["ToknowNumb"]) * (($data["rates"]->know_rate) / 100);
+            }
+            $gradePart = $ToBEgrade + $ToDOgrade + $ToKnowgrade;
+            if ($part_class == "Firts") {
+                $datasv = array(
+                    "calf_f_class" => $gradePart,
+                    "fk_student" => $std->id_user,
+                    "fk_class" => $data["class"]->id_class,
+                );
+            } else {
+                $datasv = array(
+                    "calf_s_class" => $gradePart,
+                    "fk_student" => $std->id_user,
+                    "fk_class" => $data["class"]->id_class,
+                );
+            }
+            $filter  = array(
+                "fk_student" => $std->id_user,
+                "fk_class" => $data["class"]->id_class,
+            );
+            $stdCalf = $this->DAO->queryEntity("tb_std_cls_clf", $filter, TRUE);
+            if ($stdCalf) {
+                $filter = array("id_std_cls_clf" => $stdCalf->id_std_cls_clf);
+                $comple = $this->DAO->saveAndEditDats("tb_std_cls_clf", $datasv, $filter);
+            } else {
+                $comple = $this->DAO->saveAndEditDats("tb_std_cls_clf", $datasv);
+            }
+            $countPCC += 1;
         }
+        if ($countPCC == count($data["students"])) {
+            $response       = array(
+                "status" => "success",
+                "message" => "Grades was asigned successfuly.",
+            );
+            $filter         = array(
+                "id_class" => $data["class"]->id_class,
+                "class_part" => $part_class,
+            );
+            $part_class_new = $part_class == "Firts" ? $part_class = "Second" : $part_class = "Graded";
+            $part_class_new = $part_class == "Second" ? $part_class = "Graded" : $part_class = "First";
+            $datasv = array(
+                "class_part" => $part_class_new,
+            );
+            $this->DAO->saveAndEditDats("tb_classes", $datasv, $filter);
+        } else {
+            $response = array(
+                "status" => "error",
+                "message" => "There was a problem.",
+            );
+        }
+        echo json_encode($response);
     }
 
     function GradClass()
