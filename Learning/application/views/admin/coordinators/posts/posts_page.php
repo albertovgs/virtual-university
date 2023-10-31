@@ -17,7 +17,8 @@
                                         <div class="card-header">
                                             <div class="user-block">
                                                 <?php if ($epost->img_user) { ?>
-                                                    <img src="<?= $epost->img_user; ?>" class="img-circle elevation-2" alt="User Image">
+                                                    <img src="<?= base_url("/resources/dist/img/" . $epost->img_user); ?>"
+                                                        class="img-circle elevation-2" alt="User Image">
                                                 <?php } else { ?>
                                                     <img src="<?= base_url('resources/dist/img/user3-128x128.jpg'); ?>"
                                                         class="img-circle elevation-2" alt="User Image">
