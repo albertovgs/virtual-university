@@ -500,51 +500,47 @@ class Classes extends CI_Controller
             return;
         $part_class = $this->input->get('opt') == "first" ? "Firts" : "Second";
 
-        $session       = $this->session->userdata('up_sess');
+        $session = $this->session->userdata('up_sess');
+
         $filter        = array(
             "id_gpc" => $this->input->get('gpc'),
             "fk_profesor" => $session->id_user,
         );
         $data["class"] = $this->DAO->getClasses($filter, TRUE);
-
         if (!$data["class"])
             return;
 
         $filter           = array(
-            "fk_gpc" => $this->input->get('gpc'),
+            "fk_gpc" => $data["class"]->id_gpc,
             "part_classwork" => $part_class,
             "type_classwork" => "To do",
         );
         $data["TodoNumb"] = $this->DAO->count("tb_classworks", $filter);
 
-        $filter           = array(
-            "fk_gpc" => $this->input->get('gpc'),
-            "part_classwork" => $part_class,
-            "type_classwork" => "To be",
-        );
-        $data["TobeNumb"] = $this->DAO->count("tb_classworks", $filter);
+        $filter["type_classwork"] = "To be";
+        $data["TobeNumb"]         = $this->DAO->count("tb_classworks", $filter);
 
-        $filter             = array(
-            "fk_gpc" => $this->input->get('gpc'),
-            "part_classwork" => $part_class,
-            "type_classwork" => "To know",
-        );
-        $data["ToknowNumb"] = $this->DAO->count("tb_classworks", $filter);
+        $filter["type_classwork"] = "To know";
+        $data["ToknowNumb"]       = $this->DAO->count("tb_classworks", $filter);
 
         $filter        = array(
             "fk_class" => $data["class"]->id_class,
         );
         $data["rates"] = $this->DAO->queryEntity("tb_class_rates", $filter, TRUE);
 
+
         $filter           = array(
             "clave_group" => $data["class"]->clave_group,
         );
         $data["students"] = $this->DAO->StudentsTable($filter, FALSE);
-        $countPCC         = 0;
+
+        $countPCC = 0;
         foreach ($data["students"] as $std) {
+            $gradePart        = [];
             $filter           = array(
-                "fk_gpc" => $data["class"]->id_group,
+                "fk_gpc" => $data["class"]->id_gpc,
                 "part_classwork" => $part_class,
+                "fk_student" => $std->id_student,
             );
             $data["stdWorks"] = $this->DAO->studentsclsWrk($filter, FALSE);
             $data["tdWorks"]  = 0;
@@ -580,19 +576,12 @@ class Classes extends CI_Controller
                 $ToKnowgrade = ($data["clfKnow"] / $data["ToknowNumb"]) * (($data["rates"]->know_rate) / 100);
             }
             $gradePart = $ToBEgrade + $ToDOgrade + $ToKnowgrade;
-            if ($part_class == "Firts") {
-                $datasv = array(
-                    "calf_f_class" => $gradePart,
-                    "fk_student" => $std->id_user,
-                    "fk_class" => $data["class"]->id_class,
-                );
-            } else {
-                $datasv = array(
-                    "calf_s_class" => $gradePart,
-                    "fk_student" => $std->id_user,
-                    "fk_class" => $data["class"]->id_class,
-                );
-            }
+
+            $datasv  = array(
+                "calf_f_class" => $gradePart,
+                "fk_student" => $std->id_user,
+                "fk_class" => $data["class"]->id_class,
+            );
             $filter  = array(
                 "fk_student" => $std->id_user,
                 "fk_class" => $data["class"]->id_class,
@@ -600,9 +589,9 @@ class Classes extends CI_Controller
             $stdCalf = $this->DAO->queryEntity("tb_std_cls_clf", $filter, TRUE);
             if ($stdCalf) {
                 $filter = array("id_std_cls_clf" => $stdCalf->id_std_cls_clf);
-                $comple = $this->DAO->saveAndEditDats("tb_std_cls_clf", $datasv, $filter);
+                $this->DAO->saveAndEditDats("tb_std_cls_clf", $datasv, $filter);
             } else {
-                $comple = $this->DAO->saveAndEditDats("tb_std_cls_clf", $datasv);
+                $this->DAO->saveAndEditDats("tb_std_cls_clf", $datasv);
             }
             $countPCC += 1;
         }
@@ -649,11 +638,13 @@ class Classes extends CI_Controller
                     $stdCalf = $this->DAO->queryEntity("tb_std_cls_clf", $filter, TRUE);
                     if ($stdCalf) {
                         $classClf = ($stdCalf->calf_f_class + $stdCalf->calf_s_class) / 2;
-                        $datasv   = array(
+                        echo json_encode($classClf);
+
+                        $datasv = array(
                             "calf_class" => $classClf,
                         );
-                        $filter   = array("id_std_cls_clf" => $stdCalf->id_std_cls_clf);
-                        $comple   = $this->DAO->saveAndEditDats("tb_std_cls_clf", $datasv, $filter);
+                        $filter = array("id_std_cls_clf" => $stdCalf->id_std_cls_clf);
+                        $comple = $this->DAO->saveAndEditDats("tb_std_cls_clf", $datasv, $filter);
                         if ($comple["status"] == "success") {
                             $response = array(
                                 "status" => "success",
