@@ -81,7 +81,7 @@ CREATE TABLE tb_classes(
     name_class VARCHAR(60) NOT NULL,
     clave_class VARCHAR(60) NOT NULL UNIQUE,
     lab_class INT NOT NULL,
-    class_part ENUM("Firts","Second") not null default "Firts",
+    class_part ENUM("First","Second") not null default "First",
     FOREIGN KEY (lab_class) REFERENCES tb_classrooms(id_classroom)
 );
 
@@ -133,7 +133,7 @@ CREATE TABLE tb_classworks(
     title_classwork VARCHAR(60) NOT NULL,
     content_classwork TEXT NOT NULL,
     type_classwork VARCHAR(10),
-    part_classwork ENUM("Firts","Second", "Graded") not null default "Firts",
+    part_classwork ENUM("First","Second", "Graded") not null default "First",
     status_classwork ENUM("Active","Inactive") not null default "Active",
     fk_gpc INT NOT NULL,
     date_end_classwork DATE,
