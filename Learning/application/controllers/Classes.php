@@ -621,50 +621,49 @@ class Classes extends CI_Controller
 
     function GradClass()
     {
-        if ($this->input->is_ajax_request()) {
-            if ($this->input->get('gpc')) {
-                $session          = $this->session->userdata('up_sess');
-                $filter           = array("id_gpc" => $this->input->get('gpc'), "fk_profesor" => $session->id_user);
-                $data["class"]    = $this->DAO->getClasses($filter, TRUE);
-                $filter           = array(
-                    "clave_group" => $data["class"]->clave_group,
-                );
-                $data["students"] = $this->DAO->StudentsTable($filter, FALSE);
-                foreach ($data["students"] as $std) {
-                    $filter  = array(
-                        "fk_student" => $std->id_user,
-                        "fk_class" => $data["class"]->id_class,
-                    );
-                    $stdCalf = $this->DAO->queryEntity("tb_std_cls_clf", $filter, TRUE);
-                    if ($stdCalf) {
-                        $classClf = ($stdCalf->calf_f_class + $stdCalf->calf_s_class) / 2;
-                        echo json_encode($classClf);
+        if (!$this->input->is_ajax_request())
+            return;
+        if (!$this->input->get('gpc'))
+            return;
+        $session          = $this->session->userdata('up_sess');
+        $filter           = array("id_gpc" => $this->input->get('gpc'), "fk_profesor" => $session->id_user);
+        $data["class"]    = $this->DAO->getClasses($filter, TRUE);
+        $filter           = array(
+            "clave_group" => $data["class"]->clave_group,
+        );
+        $data["students"] = $this->DAO->StudentsTable($filter, FALSE);
+        foreach ($data["students"] as $std) {
+            $filter  = array(
+                "fk_student" => $std->id_user,
+                "fk_class" => $data["class"]->id_class,
+            );
+            $stdCalf = $this->DAO->queryEntity("tb_std_cls_clf", $filter, TRUE);
+            if ($stdCalf) {
+                $classClf = ($stdCalf->calf_f_class + $stdCalf->calf_s_class) / 2;
 
-                        $datasv = array(
-                            "calf_class" => $classClf,
-                        );
-                        $filter = array("id_std_cls_clf" => $stdCalf->id_std_cls_clf);
-                        $comple = $this->DAO->saveAndEditDats("tb_std_cls_clf", $datasv, $filter);
-                        if ($comple["status"] == "success") {
-                            $response = array(
-                                "status" => "success",
-                                "message" => "Grades was asigned successfuly.",
-                            );
-                        } else {
-                            $response = array(
-                                "status" => "error",
-                                "message" => "There was a problem.",
-                            );
-                        }
-                    } else {
-                        $response = array(
-                            "status" => "error",
-                            "message" => "You can not grade the class before grade the first and second part.",
-                        );
-                    }
-                    echo json_encode($response);
+                $datasv = array(
+                    "calf_class" => $classClf,
+                );
+                $filter = array("id_std_cls_clf" => $stdCalf->id_std_cls_clf);
+                $comple = $this->DAO->saveAndEditDats("tb_std_cls_clf", $datasv, $filter);
+                if ($comple["status"] == "success") {
+                    $response = array(
+                        "status" => "success",
+                        "message" => "Grades was asigned successfuly.",
+                    );
+                } else {
+                    $response = array(
+                        "status" => "error",
+                        "message" => "There was a problem.",
+                    );
                 }
+            } else {
+                $response = array(
+                    "status" => "error",
+                    "message" => "You can not grade the class before grade the first and second part.",
+                );
             }
+            echo json_encode($response);
         }
     }
 
