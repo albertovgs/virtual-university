@@ -174,6 +174,8 @@ class DAO extends CI_Model
     $this->db->join('tb_students', 'tb_users.id_user = tb_students.id_student');
     $this->db->join('tb_majors', 'tb_students.major_student = tb_majors.id_major');
     $this->db->join('tb_groups', 'tb_students.group_student = tb_groups.id_group');
+    $this->db->order_by('IDUser');
+    $this->db->group_by('IDUser');
     $this->db->distinct();
     $query = $this->db->get("");
     if ($unique) {
