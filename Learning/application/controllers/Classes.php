@@ -498,7 +498,7 @@ class Classes extends CI_Controller
             return;
         if (!$this->input->get('opt') && !$this->input->get('gpc'))
             return;
-        $part_class = $this->input->get('opt') == "first" ? "Firts" : "Second";
+        $part_class = $this->input->get('opt') == "first" ? "First" : "Second";
 
         $session = $this->session->userdata('up_sess');
 
@@ -604,7 +604,7 @@ class Classes extends CI_Controller
                 "id_class" => $data["class"]->id_class,
                 "class_part" => $part_class,
             );
-            $part_class_new = $part_class == "Firts" ? $part_class = "Second" : $part_class = "Graded";
+            $part_class_new = $part_class == "First" ? $part_class = "Second" : $part_class = "Graded";
             $part_class_new = $part_class == "Second" ? $part_class = "Graded" : $part_class = "First";
             $datasv = array(
                 "class_part" => $part_class_new,
