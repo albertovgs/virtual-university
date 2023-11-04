@@ -639,8 +639,8 @@ class Classes extends CI_Controller
                     "message" => "You can not grade the class before grade the first and second part.",
                 );
             }
-            echo json_encode($response);
         }
+        echo json_encode($response);
     }
 
     private function _check_session()
