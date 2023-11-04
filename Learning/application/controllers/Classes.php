@@ -510,19 +510,6 @@ class Classes extends CI_Controller
         if (!$data["class"])
             return;
 
-        $filter           = array(
-            "fk_gpc" => $data["class"]->id_gpc,
-            "part_classwork" => $part_class,
-            "type_classwork" => "To do",
-        );
-        $data["TodoNumb"] = $this->DAO->count("tb_classworks", $filter);
-
-        $filter["type_classwork"] = "To be";
-        $data["TobeNumb"]         = $this->DAO->count("tb_classworks", $filter);
-
-        $filter["type_classwork"] = "To know";
-        $data["ToknowNumb"]       = $this->DAO->count("tb_classworks", $filter);
-
         $filter        = array(
             "fk_class" => $data["class"]->id_class,
         );
@@ -543,45 +530,44 @@ class Classes extends CI_Controller
                 "fk_student" => $std->id_student,
             );
             $data["stdWorks"] = $this->DAO->studentsclsWrk($filter, FALSE);
-            $data["tdWorks"]  = 0;
-            $data["tbWorks"]  = 0;
-            $data["tkWorks"]  = 0;
-            $data["clfDo"]    = 0;
-            $data["clfBE"]    = 0;
-            $data["clfKnow"]  = 0;
+
+            $data["dbkWorks"]   = array("tb" => 0, "td" => 0, "tk" => 0);
+            $data["gradeWorks"] = array("grdBe" => 0, "grdDo" => 0, "grdKnow" => 0);
+
             foreach ($data["stdWorks"] as $stdWorks) {
                 if ($stdWorks->type_classwork == "To do") {
-                    $data["tdWorks"] = $data["tdWorks"] + 1;
-                    $data["clfDo"]   = $data["clfDo"] + $stdWorks->calf_classwork;
+                    $data["dbkWorks"]["td"]      = $data["dbkWorks"]["td"] + 1;
+                    $data["gradeWorks"]["grdDo"] = $data["gradeWorks"]["grdDo"] + $stdWorks->calf_classwork;
                 }
                 if ($stdWorks->type_classwork == "To be") {
-                    $data["tbWorks"] = $data["tdWorks"] + 1;
-                    $data["clfBE"]   = $data["clfBE"] + $stdWorks->calf_classwork;
+                    $data["dbkWorks"]["tb"]      = $data["dbkWorks"]["td"] + 1;
+                    $data["gradeWorks"]["grdBe"] = $data["gradeWorks"]["grdBe"] + $stdWorks->calf_classwork;
                 }
                 if ($stdWorks->type_classwork == "To know") {
-                    $data["tkWorks"] = $data["tdWorks"] + 1;
-                    $data["clfKnow"] = $data["clfKnow"] + $stdWorks->calf_classwork;
+                    $data["dbkWorks"]["tk"]        = $data["dbkWorks"]["td"] + 1;
+                    $data["gradeWorks"]["grdKnow"] = $data["gradeWorks"]["grdKnow"] + $stdWorks->calf_classwork;
                 }
             }
             $ToDOgrade   = 0;
             $ToKnowgrade = 0;
             $ToBEgrade   = 0;
-            if ($data["rates"]->be_rate != 0) {
-                $ToBEgrade = ($data["clfBE"] / $data["TobeNumb"]) * (($data["rates"]->be_rate) / 100);
+            if ($data["dbkWorks"]["tb"] != 0) {
+                $ToBEgrade = ($data["gradeWorks"]["grdBe"] / $data["dbkWorks"]["tb"]) * (($data["rates"]->be_rate) / 100);
             }
-            if ($data["rates"]->do_rate != 0) {
-                $ToDOgrade = ($data["clfDo"] / $data["TodoNumb"]) * (($data["rates"]->do_rate) / 100);
+            if ($data["dbkWorks"]["td"] != 0) {
+                $ToDOgrade = ($data["gradeWorks"]["grdDo"] / $data["dbkWorks"]["td"]) * (($data["rates"]->do_rate) / 100);
             }
-            if ($data["rates"]->know_rate != 0) {
-                $ToKnowgrade = ($data["clfKnow"] / $data["ToknowNumb"]) * (($data["rates"]->know_rate) / 100);
+            if ($data["dbkWorks"]["tk"] != 0) {
+                $ToKnowgrade = ($data["gradeWorks"]["grdKnow"] / $data["dbkWorks"]["tk"]) * (($data["rates"]->know_rate) / 100);
             }
             $gradePart = $ToBEgrade + $ToDOgrade + $ToKnowgrade;
 
-            $datasv  = array(
-                "calf_f_class" => $gradePart,
+            $datasv = array(
+                "calf_f_class" => 0,
                 "fk_student" => $std->id_user,
                 "fk_class" => $data["class"]->id_class,
             );
+            $part_class == "First" ? $filter["calf_f_class"] = $gradePart : $filter["calf_s_class"] = $gradePart;
             $filter  = array(
                 "fk_student" => $std->id_user,
                 "fk_class" => $data["class"]->id_class,
@@ -596,20 +582,10 @@ class Classes extends CI_Controller
             $countPCC += 1;
         }
         if ($countPCC == count($data["students"])) {
-            $response       = array(
+            $response = array(
                 "status" => "success",
                 "message" => "Grades was asigned successfuly.",
             );
-            $filter         = array(
-                "id_class" => $data["class"]->id_class,
-                "class_part" => $part_class,
-            );
-            $part_class_new = $part_class == "First" ? $part_class = "Second" : $part_class = "Graded";
-            $part_class_new = $part_class == "Second" ? $part_class = "Graded" : $part_class = "First";
-            $datasv = array(
-                "class_part" => $part_class_new,
-            );
-            $this->DAO->saveAndEditDats("tb_classes", $datasv, $filter);
         } else {
             $response = array(
                 "status" => "error",
