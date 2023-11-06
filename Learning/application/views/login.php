@@ -48,11 +48,11 @@
                       <div class="form-group">
                         <input type="email" class="form-control form-control-user" id="exampleInputEmail"
                           aria-describedby="emailHelp" placeholder="Enter Email Address..." name="inpEmail"
-                          id="inpEmail" autocomplete="off">
+                          id="inpEmail" autocomplete="off" required>
                       </div>
                       <div class="form-group">
                         <input type="password" class="form-control form-control-user" id="exampleInputPassword"
-                          placeholder="Password" name="inpPassword" id="inpPassword">
+                          placeholder="Password" name="inpPassword" id="inpPassword" required>
                       </div>
                       <div class="col-12">
                         <button type="submit" class="btn btn-primary btn-user btn-block">Sign In</button>
