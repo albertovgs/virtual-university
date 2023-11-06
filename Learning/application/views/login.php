@@ -37,9 +37,8 @@
                         alt="isotype">
                       <p class="login-box-msg text-danger">
                         <?php
-                        if (@$this->session->flashdata("error_login")) {
+                        if (@$this->session->flashdata("error_login"))
                           echo $this->session->flashdata("error_login");
-                        }
                         ?>
                       </p>
                     </div>
@@ -48,7 +47,7 @@
                       <div class="form-group">
                         <input type="email" class="form-control form-control-user" id="exampleInputEmail"
                           aria-describedby="emailHelp" placeholder="Enter Email Address..." name="inpEmail"
-                          id="inpEmail" autocomplete="off" required>
+                          id="inpEmail" autocomplete="on" required>
                       </div>
                       <div class="form-group">
                         <input type="password" class="form-control form-control-user" id="exampleInputPassword"
