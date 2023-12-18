@@ -369,8 +369,7 @@ class Classes extends CI_Controller
                         $config['file_name']     = uniqid();
                         $this->load->library('upload', $config);
                         if ($this->upload->do_upload('inpFile')) {
-                            $image   = base_url('') . $config['upload_path'] . "/" . $this->upload->data()['file_name'];
-                            $flujo[] = $config;
+                            $file = $config['upload_path'] . "/" . $this->upload->data()['file_name'];
                         } else {
                             $response = array(
                                 "status" => "error",
@@ -379,9 +378,9 @@ class Classes extends CI_Controller
                             echo json_encode($response);
                             return 0;
                         }
-                        if ($image) {
+                        if ($file) {
                             $data     = array(
-                                "file_classwork" => $image,
+                                "file_classwork" => $file,
                                 "fk_student" => $session->id_user,
                                 "fk_classwork" => $this->input->post('wrk'),
                             );
