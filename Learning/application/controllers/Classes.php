@@ -153,8 +153,8 @@ class Classes extends CI_Controller
     {
         if ($this->input->is_ajax_request()) {
             if ($this->input->get('cls')) {
+                $data["cls"] = $this->input->get('cls');
                 if (!$this->input->get('opt')) {
-                    $data["cls"] = $this->input->get('cls');
                     echo $this->load->view('students/class_form', $data, TRUE);
                 } else {
                     $filter         = array(
@@ -245,7 +245,7 @@ class Classes extends CI_Controller
                 );
                 if ($this->input->post('option')) {
                     $filter = array(
-                        "id_classwork" => $this->input->post('wrk'),
+                        "id_classwork" => $this->input->post("inpCls"),
                     );
                 } else {
                     $filter = array();
