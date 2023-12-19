@@ -49,7 +49,7 @@
                         <option value="<?= @$class->part_classwork; ?>" hidden>
                             <?= @$class->part_classwork ? $class->part_classwork : 'Select one'; ?>
                         </option>
-                        <option>Firts</option>
+                        <option>First</option>
                         <option>Second</option>
                     </select>
                 </div>

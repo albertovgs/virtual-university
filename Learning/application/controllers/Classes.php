@@ -153,8 +153,8 @@ class Classes extends CI_Controller
     {
         if ($this->input->is_ajax_request()) {
             if ($this->input->get('cls')) {
+                $data["cls"] = $this->input->get('cls');
                 if (!$this->input->get('opt')) {
-                    $data["cls"] = $this->input->get('cls');
                     echo $this->load->view('students/class_form', $data, TRUE);
                 } else {
                     $filter         = array(
@@ -245,7 +245,7 @@ class Classes extends CI_Controller
                 );
                 if ($this->input->post('option')) {
                     $filter = array(
-                        "id_classwork" => $this->input->post('wrk'),
+                        "id_classwork" => $this->input->post("inpCls"),
                     );
                 } else {
                     $filter = array();
@@ -369,8 +369,7 @@ class Classes extends CI_Controller
                         $config['file_name']     = uniqid();
                         $this->load->library('upload', $config);
                         if ($this->upload->do_upload('inpFile')) {
-                            $image   = base_url('') . $config['upload_path'] . "/" . $this->upload->data()['file_name'];
-                            $flujo[] = $config;
+                            $file = $config['upload_path'] . "/" . $this->upload->data()['file_name'];
                         } else {
                             $response = array(
                                 "status" => "error",
@@ -379,9 +378,9 @@ class Classes extends CI_Controller
                             echo json_encode($response);
                             return 0;
                         }
-                        if ($image) {
+                        if ($file) {
                             $data     = array(
-                                "file_classwork" => $image,
+                                "file_classwork" => $file,
                                 "fk_student" => $session->id_user,
                                 "fk_classwork" => $this->input->post('wrk'),
                             );
