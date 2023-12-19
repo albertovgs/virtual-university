@@ -39,7 +39,7 @@
     });
 
     $(document).on('click', '.btn_opt', async function () {
-        var cls = <?= $class->id_gpc; ?>;
+        var cls = "<?= $class->clave_class; ?>";
         var opt = $(this).attr('data-opt');
         var wrk = $(this).attr('data-clsw');
         $.ajax({
