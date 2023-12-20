@@ -299,9 +299,10 @@ class Majors extends CI_Controller
                     $data["quarters"]   = $this->DAO->count("tb_periods_groups", $filter);
                     $filter             = array(
                         "type_period" => "Current",
-                        "fk_major" => $data["group"]->major_group,
+                        // "fk_major" => $data["group"]->major_group,
                     );
-                    $data["currentQua"] = $this->DAO->getPeriods($filter, TRUE);
+                    $data["currentQua"] = $this->DAO->getPeriods($filter, TRUE,TRUE);
+                    echo json_encode($filter);
                     echo $this->load->view("admin/coordinators/majors/Gtool_form", $data, TRUE);
                 } else if ($this->input->get('option') == "shutdown") {
                     $data["id"]      = "shutdownGroup";
@@ -343,9 +344,9 @@ class Majors extends CI_Controller
                         if ($data["group"]->clave_group == $this->input->post('inpGrp')) {
                             $filter             = array(
                                 "type_period" => "Current",
-                                "fk_major" => $data["group"]->major_group,
+                                // "fk_major" => $data["group"]->major_group,
                             );
-                            $data["currentQua"] = $this->DAO->getPeriods($filter, TRUE);
+                            $data["currentQua"] = $this->DAO->getPeriods($filter, TRUE, TRUE);
                             $fk_period          = $data["currentQua"]->id_period;
                             $last_quarter       = $data["currentQua"]->name_period;
                             if ($data["currentQua"]->name_period == $this->input->post('inpLastPeriod')) {
@@ -357,16 +358,16 @@ class Majors extends CI_Controller
                                 return 0;
                             } else {
                                 $this->DAO->trans_begin();
-                                $data = array(
+                                $data["DATA"] = array(
                                     "fk_group" => $this->input->post('inpIdGrp'),
                                     "fk_period" => $fk_period,
                                 );
-                                $this->DAO->saveAndEditDats("tb_periods_groups", $data);
+                                $this->DAO->saveAndEditDats("tb_periods_groups", $data["DATA"]);
                                 $filter = array("id_group" => $this->input->post('inpIdGrp'), );
-                                $data   = array(
-                                    "last_quarter" => $last_quarter,
+                                $data["DATA"] = array(
+                                    "last_quarter" => $this->input->post("inpLastPeriod"),
                                 );
-                                $this->DAO->saveAndEditDats("tb_groups", $data, $filter);
+                                $this->DAO->saveAndEditDats("tb_groups", $data["DATA"], $filter);
                                 $complete = $this->DAO->trans_end();
                                 if ($complete) {
                                     $response = array(
