@@ -355,7 +355,7 @@
                             delay: 5000,
                             body: response.message
                         });
-                        load_groups(<?= @$id ?>, Active);
+                        load_groups(<?= @$id ?>, "Active");
                     }
                 }
             });
