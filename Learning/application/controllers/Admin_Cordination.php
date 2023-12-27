@@ -19,6 +19,7 @@ class Admin_Cordination extends CI_Controller
 		$this->load->view('admin/coordinators/coordinators_page');
 		$this->load->view('includes/footer');
 		$this->load->view('admin/coordinators/coordinators_js');
+		$this->generateID(9);
 	}
 
 	function showTable()
@@ -92,7 +93,6 @@ class Admin_Cordination extends CI_Controller
 			$this->form_validation->set_rules("inpLastname", "Last Name", "required|min_length[5]|max_length[60]");
 			$this->form_validation->set_rules("inpBirthday", "Birthday", "required|date");
 			$this->form_validation->set_rules("inpGender", "Gender", "required");
-			$this->form_validation->set_rules("inpID", "ID", "required|min_length[8]|max_length[12]");
 			if (!$this->form_validation->run()) {
 				$response = array(
 					"status" => "error",
@@ -100,6 +100,7 @@ class Admin_Cordination extends CI_Controller
 				);
 				echo JSON_encode($response);
 			}
+			$ID = $this->generateID(9);
 			if (!$this->input->post("option") && !$this->input->post("code")) {
 				$exist = $this->DAO->queryEntity("tb_users", $filter = array("IDUser" => $this->input->post('inpID')), TRUE);
 				if (!$exist) {
@@ -123,7 +124,7 @@ class Admin_Cordination extends CI_Controller
 					}
 					$data = array(
 						"id_user" => $user_id,
-						"IDUser" => $this->input->post('inpID'),
+						"IDUser" => $ID,
 						"email_user" => $email,
 						"img_user" => $user_img,
 						"password_tem_user" => $password,
@@ -292,6 +293,17 @@ class Admin_Cordination extends CI_Controller
 			$key .= substr($pattern, mt_rand(0, $max), 1);
 		}
 		return $key;
+	}
+
+	private function generateID($length)
+	{
+		$key     = "";
+		$pattern = "1234567890";
+		$max     = strlen($pattern) - 1;
+		for ($i = 0; $i < $length; $i++) {
+			$key .= substr($pattern, mt_rand(0, $max), 1);
+		}
+		return (int)$key;
 	}
 
 	private function _check_session()
