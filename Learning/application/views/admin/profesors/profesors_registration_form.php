@@ -20,7 +20,7 @@
     </div>
     <div class="modal-body">
       <div class="row">
-        <div class="form-group col-12">
+        <div class="form-group col-12" hidden>
           <label for="exampleInputBorderWidth2">Empoyee ID:</label>
           <input type="text" <?= @$titulo == "Edit" || @$titulo == "Shutdown" ? 'readonly' : ''; ?>
             class="form-control input-group" value="<?= @$profesorFinded->IDUser; ?>" name="inpID" id="inpID">
