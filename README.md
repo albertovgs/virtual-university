@@ -67,7 +67,7 @@ This project is licensed under the MIT License.
 ## Meet the Author 🚀
 
 - **Alberto Vargas**
-  - GitHub: [@Alberto-Vgs](https://github.com/Alberto-Vgs)
+  - GitHub: [@Alberto-Vgs](https://github.com/albertovgs)
   - TikTok: [@alberto_vgs](https://www.tiktok.com/@alberto_vgs)
   - Instagram: [@alberto_vgs_](https://www.instagram.com/alberto_vgs_/)
   - LinkedIn: [Alberto Vargas](https://www.linkedin.com/in/alberto-vgs/)
