@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "${APACHE_PORT:-8080}:80"
+    volumes:
+      - ./Learning:/var/www/html
+    environment:
+      - DB_HOST=db
+      - DB_USER=${DB_USER:-learning_user}
+      - DB_PASS=${DB_PASS:-learning_pass}
+      - DB_NAME=${DB_NAME:-sw15_update}
+      - CI_ENV=${CI_ENV:-development}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - virtual-university-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-root_password}
+      - MYSQL_DATABASE=${DB_NAME:-sw15_update}
+      - MYSQL_USER=${DB_USER:-learning_user}
+      - MYSQL_PASSWORD=${DB_PASS:-learning_pass}
+      - MYSQL_CHARSET=utf8mb4
+      - MYSQL_COLLATION=utf8mb4_unicode_ci
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./Sql:/docker-entrypoint-initdb.d:ro
+    networks:
+      - virtual-university-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-root_password}"]
+      interval: 30s
+      timeout: 20s
+      retries: 5
+      start_period: 120s
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --default-character-set=utf8mb4
+      --init-connect='SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci'
+      --innodb-file-format=Barracuda
+      --innodb-file-per-table=1
+      --innodb-large-prefix=1
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  virtual-university-network:
+    driver: bridge
