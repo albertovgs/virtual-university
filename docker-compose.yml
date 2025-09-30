@@ -1,18 +1,28 @@
-version: '3.8'
-
 services:
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: ${BUILD_TARGET:-development}
+    container_name: virtual-university-web
     ports:
       - "${APACHE_PORT:-8080}:80"
     volumes:
-      - ./Learning:/var/www/html
+      # Application code (bind mount for development)
+      - ./Learning:/var/www/html:cached
+      # Logs volume for persistence
+      - web_logs:/var/log/apache2
+      - php_logs:/var/log
     environment:
       - DB_HOST=db
       - DB_USER=${DB_USER:-learning_user}
       - DB_PASS=${DB_PASS:-learning_pass}
       - DB_NAME=${DB_NAME:-sw15_update}
       - CI_ENV=${CI_ENV:-development}
+      - PHP_MEMORY_LIMIT=${PHP_MEMORY_LIMIT:-256M}
+      - PHP_MAX_EXECUTION_TIME=${PHP_MAX_EXECUTION_TIME:-30}
+      - PHP_UPLOAD_MAX_FILESIZE=${PHP_UPLOAD_MAX_FILESIZE:-10M}
+      - PHP_POST_MAX_SIZE=${PHP_POST_MAX_SIZE:-10M}
     depends_on:
       db:
         condition: service_healthy
@@ -20,46 +30,107 @@ services:
       - virtual-university-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
+      test: ["CMD", "/usr/local/bin/health-check"]
+      interval: ${HEALTH_CHECK_INTERVAL:-30}s
+      timeout: ${HEALTH_CHECK_TIMEOUT:-10}s
+      retries: ${HEALTH_CHECK_RETRIES:-5}
       start_period: 60s
+    # Resource limits for better performance
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
 
   db:
-    image: mysql:5.7
+    image: mysql:8.0
+    container_name: virtual-university-db
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-root_password}
       - MYSQL_DATABASE=${DB_NAME:-sw15_update}
       - MYSQL_USER=${DB_USER:-learning_user}
       - MYSQL_PASSWORD=${DB_PASS:-learning_pass}
-      - MYSQL_CHARSET=utf8mb4
-      - MYSQL_COLLATION=utf8mb4_unicode_ci
     volumes:
+      # Persistent database storage
       - mysql_data:/var/lib/mysql
+      # Database initialization scripts
       - ./Sql:/docker-entrypoint-initdb.d:ro
     networks:
       - virtual-university-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-root_password}"]
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-p${MYSQL_ROOT_PASSWORD:-root_password}",
+        ]
       interval: 30s
       timeout: 20s
       retries: 5
       start_period: 120s
+    # Basic MySQL 8.0 configuration
     command: >
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_unicode_ci
-      --default-character-set=utf8mb4
-      --init-connect='SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci'
-      --innodb-file-format=Barracuda
-      --innodb-file-per-table=1
-      --innodb-large-prefix=1
+      --innodb-buffer-pool-size=256M
+      --max-connections=100
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+
+  # Redis cache service (optional, for better performance)
+  redis:
+    image: redis:7-alpine
+    container_name: virtual-university-redis
+    command: redis-server --appendonly yes --maxmemory 128mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    networks:
+      - virtual-university-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 64M
+    profiles:
+      - cache
 
 volumes:
+  # Persistent data volumes
   mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+
+  # Log volumes
+  web_logs:
+    driver: local
+  php_logs:
+    driver: local
+  mysql_logs:
     driver: local
 
 networks:
   virtual-university-network:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

@@ -9,7 +9,7 @@ echo "=== Virtual University File Synchronization Test Script ==="
 echo "Testing file synchronization and hot-reload capabilities..."
 
 # Configuration
-WEB_CONTAINER="virtual-university-web-1"
+WEB_CONTAINER="virtual-university-web"
 BASE_URL="http://localhost:8080"
 TEST_FILE="Learning/test_sync_file.php"
 TEST_CONTROLLER="Learning/application/controllers/Test_sync.php"

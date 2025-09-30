@@ -9,8 +9,8 @@ echo "=== Virtual University Database Test Script ==="
 echo "Testing database initialization and connectivity..."
 
 # Configuration
-DB_CONTAINER="virtual-university-db-1"
-WEB_CONTAINER="virtual-university-web-1"
+DB_CONTAINER="virtual-university-db"
+WEB_CONTAINER="virtual-university-web"
 DB_HOST="db"
 DB_USER="learning_user"
 DB_PASS="learning_pass"

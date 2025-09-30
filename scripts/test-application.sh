@@ -9,7 +9,7 @@ echo "=== Virtual University Application Test Script ==="
 echo "Testing CodeIgniter application functionality..."
 
 # Configuration
-WEB_CONTAINER="virtual-university-web-1"
+WEB_CONTAINER="virtual-university-web"
 BASE_URL="http://localhost:8080"
 TIMEOUT=10
 

@@ -153,8 +153,8 @@ display_summary() {
         echo "- View logs: docker-compose logs -f"
         echo "- Stop containers: docker-compose down"
         echo "- Restart containers: docker-compose restart"
-        echo "- Access web container: docker exec -it virtual-university-web-1 bash"
-        echo "- Access database: docker exec -it virtual-university-db-1 mysql -u learning_user -p sw15_update"
+        echo "- Access web container: docker exec -it virtual-university-web bash"
+        echo "- Access database: docker exec -it virtual-university-db mysql -u learning_user -p sw15_update"
     else
         echo -e "${RED}${BOLD}❌ $FAILED_TESTS TEST(S) FAILED ❌${NC}"
         echo
