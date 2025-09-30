@@ -1,0 +1,56 @@
+[mysqld]
+# Virtual University MySQL 8.0 Configuration
+
+# Basic settings
+default-storage-engine = InnoDB
+sql-mode = "STRICT_TRANS_TABLES,NO_ZERO_DATE,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO"
+
+# Character set and collation
+character-set-server = utf8mb4
+collation-server = utf8mb4_unicode_ci
+
+# InnoDB settings for better performance
+innodb-buffer-pool-size = 256M
+innodb-redo-log-capacity = 134217728
+innodb-log-buffer-size = 16M
+innodb-flush-log-at-trx-commit = 2
+innodb-file-per-table = 1
+
+# Connection settings
+max-connections = 100
+max-connect-errors = 10000
+connect-timeout = 60
+wait-timeout = 28800
+interactive-timeout = 28800
+
+# Logging
+general-log = 0
+slow-query-log = 1
+slow-query-log-file = /var/log/mysql/slow.log
+long-query-time = 2
+log-queries-not-using-indexes = 1
+
+# Binary logging
+log-bin = mysql-bin
+binlog-format = ROW
+binlog-expire-logs-seconds = 604800
+max-binlog-size = 100M
+
+# Security settings
+local-infile = 0
+
+# Performance tuning
+table-open-cache = 2000
+table-definition-cache = 1400
+thread-cache-size = 8
+tmp-table-size = 64M
+max-heap-table-size = 64M
+
+# MyISAM settings (if needed)
+key-buffer-size = 32M
+
+[mysql]
+default-character-set = utf8mb4
+
+[client]
+default-character-set = utf8mb4

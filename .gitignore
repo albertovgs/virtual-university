@@ -5,4 +5,40 @@
 /Learning/resources/dist/img/
 /Learning/.editorconfig
 /Learning/composer.json
-/Learning/application/config/database.php
+
+# Docker related files
+.env
+.env.local
+.env.*.local
+docker-compose.override.yml
+docker-compose.*.yml
+!docker-compose.yml
+!docker-compose.prod.yml
+
+# Docker volumes and data
+mysql_data/
+postgres_data/
+redis_data/
+
+# Docker build context
+.dockerignore
+
+# Container logs
+*.log
+docker-compose.log
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

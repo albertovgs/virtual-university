@@ -1,0 +1,28 @@
+[Unit]
+Description=Virtual University Health Monitor
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/virtual-university
+ExecStart=/opt/virtual-university/scripts/monitor.sh continuous
+Restart=always
+RestartSec=30
+
+# Environment variables
+Environment=LOG_FILE=/var/log/virtual-university-monitor.log
+Environment=CHECK_INTERVAL=300
+Environment=DISK_THRESHOLD=85
+Environment=MEMORY_THRESHOLD=90
+Environment=AUTO_RESTART=true
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/var/log /opt/virtual-university
+
+[Install]
+WantedBy=multi-user.target
